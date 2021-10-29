@@ -1,0 +1,37 @@
+{% extends "blog/base.html" %}
+{% load static%}
+{%block title%} My Blog {% endblock%}
+
+{%block css_file%}
+ <link rel="stylesheet", href="{% static "blog/post.css"%}">
+ <link rel="stylesheet", href="{% static "blog/index.css"%}">
+{%endblock%}
+
+{%block content%}
+<hr>
+<title> Logistics Conversation </title>
+<div class="container-fluid">
+    <div class="mt-10" style="margin:10px 0px 10px 0px">
+        <br />
+        <H1> <strong><center style="font-family: Times, serif; color: #012c50;"> Join the Logistics Conversation </center> </strong> </H1>
+        <h5> <center>Creating the Foundation for Impactful Research and Innovation </center></h5>
+        <br>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <h3> Welcome to the logistics conversation</h3> <br>
+            <h5>The performance of the national logistics systems is critical to our economic performance - for both small and large enterprises. Our goal is to understand
+                ,enhance, promote and give voice to our national sources of logistics research, and to promote uptake in policy practice. Share your vies in the forum, map your work
+                and participate in building our national research agenda.
+            </h5>
+        </div>
+      <div class="col-md-6">
+        <img src= "{% static 'blog/images/discussion.jpg' %}">
+      </div>
+    </div>
+</div>
+
+   
+  
+{% endblock %}

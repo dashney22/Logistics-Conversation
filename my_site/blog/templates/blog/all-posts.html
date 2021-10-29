@@ -1,0 +1,31 @@
+{% extends "blog/base.html"%}
+{% load static %}
+
+{%block title%} All My Posts {% endblock %}
+
+{%block css_file%} 
+ <link rel="stylesheet", href="{% static "blog/post.css"%}">
+ <link rel="stylesheet" href="{% static "blog/all-posts.css" %}">
+{%endblock%}
+
+
+{% block content %}
+<section id="all-posts">
+    <h2> All Posts </h2>
+    <form class="form-inline my-2 my-lg-0">
+        <div class="row">
+            <div class="col-md-8"><input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> <br></div>
+            
+            <div class="col-md-4"><a href="{% url 'add-post'%}" class="btn btn-success"><span class="glyphicon glyphicon-add"> Add Post</span> </a></div>
+        </div>
+        
+      </form> <br><br>
+    <ul>
+    
+        {% for post in posts%}
+            {%include "blog/includes/post.html"%}
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

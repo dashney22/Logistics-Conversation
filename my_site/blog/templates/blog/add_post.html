@@ -1,0 +1,22 @@
+{% extends 'blog/base.html' %}
+
+{% load static %}
+
+{%block content %} 
+
+<div class="container-fluid">
+    <center><h1> Add Post </h1> <br/><br/>
+
+ <div class="form-group">
+
+    <form method="POST" enctype="multipart/form-data"> 
+        {% csrf_token%}
+        {{ formP.as_p }}
+        
+        <button type="submit" class="btn btn-light">Submit</button>
+    </form>    
+ </div>
+
+</div> </center>
+
+{% endblock %}
