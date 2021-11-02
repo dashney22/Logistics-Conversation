@@ -3,7 +3,7 @@ from .models import Post, Tag, Profile, Comment
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views.generic import CreateView
-from .forms import EditPostForm, UserRegistrationForm, ProfileRegistrationForm, ProfileUpdateForm, CreatePostForm, CreateTagForm, CreateCommentForm
+from .forms import EditPostForm, UserRegistrationForm, ProfileRegistrationForm, ProfileUpdateForm, CreatePostForm, CreateTagForm, CreateCommentForm, ContactUsForm
 from django.contrib.auth.decorators import login_required
 
 
@@ -13,8 +13,8 @@ all_posts = [
     
     
 ]
-
-def create_post(request):
+@login_required(login_url="user-login")
+def create_post_view(request):
     author = request.user
 
     if request.method == "POST":
@@ -32,30 +32,30 @@ def create_post(request):
     return render(request,"blog/add_post.html",{"formP":formP})
 
 
-def user_login(request):
+def user_login_view(request):
     return render(request, "blog/login.html", {})
 
 # get all posts function
 def get_all_posts():
     return Post.objects.all()
 
-def starting_page(request):
+def starting_page_view(request):
     latest = get_all_posts().order_by("-date")[:3] ## fetches latest 3 posts and order by date from newest to oldest
     return render(request, "blog/index.html",{
         "posts": latest
     })
 
 
-def posts(request):
+def posts_view(request):
     all_posts = get_all_posts()
     return render(request,"blog/all-posts.html",{
         "posts" : all_posts
     })
 
-def post_details(request, slug):
+def post_details_view(request, slug):
     identified_post = get_object_or_404(Post, slug=slug)
     #identified_post = next(post for post in crack_post if post["slug"]== slug)
-    author = request.user
+    author = identified_post.author
     comments = Comment.objects.filter(post_id=identified_post)
 
     if request.method == "POST":
@@ -64,9 +64,9 @@ def post_details(request, slug):
         if formC.is_valid():
             print(request.FILES)
             if (request.FILES):
-                comment = formC.save(author,request.FILES['image'],identified_post)
+                comment = formC.save(request.user,request.FILES['image'],identified_post)
             else:
-                comment = formC.save(author,None,identified_post)
+                comment = formC.save(request.user,None,identified_post)
 
 
             query = formC.instance
@@ -75,26 +75,31 @@ def post_details(request, slug):
             messages.error(request,("There was an issue with the comment"))
 
     formC = CreateCommentForm(initial={"body":"", "image":None})
+    edit_rights = True if author == request.user else False
     return render(request,"blog/post-detail.html",{
         "post": identified_post,
         "tags" : identified_post.tags.all(),
         "comments": comments,
         "formC" : formC,
+        "edit_rights": edit_rights,
     })
-
-def edit_post(request,slug):
+@login_required(login_url="user-login")
+def edit_post_view(request,slug):
     post_information = get_object_or_404(Post,slug=slug)
-    if request.method == "GET":
-        form = EditPostForm(initial={"title":post_information.title,
-                                     "excerpt":post_information.excerpt,
-                                     "image":post_information.image,
-                                     "content":post_information.content,
-                                     "tags":post_information.tags.all()})
-        return render(request,"blog/update_post.html",{'form':form,'post':post_information})
-    else:
-        form = EditPostForm(request.POST,instance=post_information)
-        edited_post = form.save()
-        return redirect("share-thoughts")
+    author = post_information.author
+    if (author == request.user):
+        if request.method == "GET":
+            form = EditPostForm(initial={"title":post_information.title,
+                                        "excerpt":post_information.excerpt,
+                                        "image":post_information.image,
+                                        "content":post_information.content,
+                                        "tags":post_information.tags.all()})
+            return render(request,"blog/update_post.html",{'form':form,'post':post_information})
+        else:
+            form = EditPostForm(request.POST,instance=post_information)
+            edited_post = form.save()
+            return redirect("share-thoughts")
+    
 
     
 def login_view(request):
@@ -136,7 +141,7 @@ def register_view(request):
 
 
     return render(request, "blog/register.html", {"formU":formU,"formP":formP})
-
+@login_required(login_url="user-login")
 def profile_view(request):
     profile_information = get_object_or_404(Profile,user=request.user)
     if request.method  == 'GET':
@@ -151,6 +156,7 @@ def profile_view(request):
         profile_update = form.save()
         return redirect('home-page')
 
+@login_required(login_url="user-login")
 def add_tag_view(request):
 
     if request.method == "POST":
@@ -179,6 +185,23 @@ def what_if_view(request):
 
     return render(request, "blog/what-if.html",)
 
-def research_community(request):
+def research_community_view(request):
 
     return render(request, "blog/research-community.html",)
+
+def contact_us_view(request):
+    formC = ContactUsForm()
+    return render(request, "blog/contact-us.html", {"formC":formC})
+
+def research_agenda_view(request):
+
+    return render(request, "blog/research-agenda.html",)
+
+def about_us_view(request):
+
+    return render(request, "blog/about-us.html",)
+
+def what_if_view(request):
+
+    return render(request, "blog/what-if.html",)
+

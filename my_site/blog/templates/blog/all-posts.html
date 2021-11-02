@@ -16,12 +16,13 @@
         <div class="row">
             <div class="col-md-8"><input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> <br></div>
-            
+            {% if user.is_authenticated %}
             <div class="col-md-4"><a href="{% url 'add-post'%}" class="btn btn-success"><span class="glyphicon glyphicon-add"> Add Post</span> </a></div>
+            {% endif %}
         </div>
         
       </form> <br><br>
-    <ul>
+    <ul class="post_list">
     
         {% for post in posts%}
             {%include "blog/includes/post.html"%}

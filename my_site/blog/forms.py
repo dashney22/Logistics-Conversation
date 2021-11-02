@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Post, User, Profile, Tag, Comment
 from django.contrib import messages
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.utils.translation import gettext_lazy as _
 
 
 illegal_symbols = ['!','#','$','%','^','&','*',
@@ -132,3 +133,23 @@ class CreateCommentForm(ModelForm):
         if commit:
             comment_c.save()
         return comment_c
+
+def phone_number_validator(value):
+    if value[0] == "0":
+        if len(value) != 10:
+            raise ValidationError(_('%(value)s is not a valid phone number. Length is too long'))
+        elif not value.isdecimal():
+            raise ValidationError(_('%(value)s is not a valid phone number. Contains letters or symbols'))
+    elif value[0] == "+":
+        if len(value) != 12:
+            raise ValidationError(_('%(value)s is not a valid phone number'))
+        elif not value[1:].isdecimal():
+            raise ValidationError(_('%(value)s is not a valid phone number. Contains letters or symbols'))
+
+
+
+class ContactUsForm(forms.Form):
+    email = forms.EmailField()
+    name = forms.CharField()
+    phone = forms.CharField(validators= [phone_number_validator])
+    subject = forms.CharField()
