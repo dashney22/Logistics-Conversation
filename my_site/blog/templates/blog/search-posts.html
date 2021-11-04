@@ -10,8 +10,9 @@
 
 
 {% block content %}
-<section id="all-posts">
-    <h2> All Posts </h2>
+<section id="search-posts">
+    <h2> Search posts</h2>
+    <a href="{%url 'share-thoughts'%}" class="btn btn-info">Back to all posts</a>
     <form class="form-inline my-2 my-lg-0" action="{% url 'post-search' %}" method="GET" value="{{request.GET.search_bar}}">
         <div class="row">
             <div class="col-md-8"><input class="form-control mr-sm-2" name="search_bar" type="text" placeholder="Search" aria-label="Search">
@@ -24,9 +25,22 @@
       </form> <br><br>
     <ul class="post_list">
     
+
+        {%if request.GET.search_bar != '' %}
+        
+        {% if posts %}
+        <h1>Results for <b>{{ request.GET.q }}</b></h1>
+        <br/><br/>
+
         {% for post in posts%}
             {%include "blog/includes/post.html"%}
         {% endfor %}
+
+        {% else %}
+        <p>No search results for this query</p> 
+        {% endif %}
+        {% endif %}
+        
     </ul>
 </section>
 {% endblock %}

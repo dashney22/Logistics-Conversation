@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.views.generic import CreateView
 from .forms import EditPostForm, UserRegistrationForm, ProfileRegistrationForm, ProfileUpdateForm, CreatePostForm, CreateTagForm, CreateCommentForm, ContactUsForm
 from django.contrib.auth.decorators import login_required
-
+from django.db.models import Q
 
 
 # Create your views here.
@@ -204,4 +204,41 @@ def about_us_view(request):
 def what_if_view(request):
 
     return render(request, "blog/what-if.html",)
+
+
+def get_queryset(request):
+        query = request.GET.get('search_bar')
+        print(request.GET)
+        object_list = Post.objects.filter(
+            Q(title__icontains=query) | Q(excerpt__icontains=query) |Q(content__icontains=query) | Q(author__icontains=query) |Q(tags__icontains=query)
+        )
+        return object_list
+
+
+
+
+def posts_search_view(request):
+    if request.method == 'GET':
+        query= request.GET.get('search_bar')
+        submitbutton= request.GET.get('"search_submit"')
+
+        if query is not None:
+            lookups= Q(title__icontains=query) | Q(excerpt__icontains=query) |Q(content__icontains=query) | Q(author__first_name__icontains=query)| Q(author__last_name__icontains=query) | Q(author__username__icontains=query) |Q(tags__caption__icontains=query)
+
+            results= Post.objects.filter(lookups).distinct()
+            print(results)
+            context={'posts': results,
+                     'submitbutton': submitbutton}
+
+            return render(request, "blog/search-posts.html", context)
+
+        else:
+            return render(request, "blog/search-posts.html")
+
+    else:
+        return render(request, 'search/search-posts.html')
+
+
+    
+
 

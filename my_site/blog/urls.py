@@ -6,6 +6,7 @@ urlpatterns = [
     path("", views.starting_page_view, name="home-page"),
     path('add_post/',views.create_post_view, name="add-post"),
     path("posts", views.posts_view, name="share-thoughts"),
+    path("posts/search", views.posts_search_view, name="post-search"),
     path("posts/<slug:slug>", views.post_details_view, name="post-detail-page"),
     path("research-agenda/", views.research_agenda_view, name="research-agenda"),
     path("research-community/", views.research_community_view, name="research-community"),
