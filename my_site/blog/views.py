@@ -6,8 +6,10 @@ from django.views.generic import CreateView
 from .forms import EditPostForm, UserRegistrationForm, ProfileRegistrationForm, ProfileUpdateForm, CreatePostForm, CreateTagForm, CreateCommentForm, ContactUsForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import HttpResponseRedirect
+from .email_functions import query_notification
 
-
+from django.urls import reverse_lazy, reverse
 # Create your views here.
 all_posts = [
     
@@ -51,6 +53,34 @@ def posts_view(request):
     return render(request,"blog/all-posts.html",{
         "posts" : all_posts
     })
+
+def like_post_view(request,slug):
+    post = get_object_or_404(Post,id=request.POST.get('post_id'))
+    
+    liked = False
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+        liked = False
+    else:
+        post.likes.add(request.user)
+        liked = True
+
+    return HttpResponseRedirect(reverse('post-detail-page', args=[str(slug)]))
+
+
+def like_comment_view(request, slug ):
+    comment = get_object_or_404(Comment,id=request.POST.get('comment_id'))
+    
+    liked = False
+    if comment.likes.filter(id=request.user.id).exists():
+        comment.likes.remove(request.user)
+        liked = False
+    else:
+        comment.likes.add(request.user)
+        liked = True
+
+    return HttpResponseRedirect(reverse('post-detail-page', args=[str(slug)]))
+
 
 def post_details_view(request, slug):
     identified_post = get_object_or_404(Post, slug=slug)
@@ -190,6 +220,20 @@ def research_community_view(request):
     return render(request, "blog/research-community.html",)
 
 def contact_us_view(request):
+
+    if request.method == "POST":
+        formC = ContactUsForm(request.POST)
+
+        if formC.is_valid():
+            email = formC.cleaned_data['email']
+            name = formC.cleaned_data['name']
+            phone = formC.cleaned_data['phone']
+            subject = formC.cleaned_data['subject']
+            body = formC.cleaned_data['body']
+            query_notification(request,email,name,phone,subject,body)
+            messages.success(request,f"Query successfully submitted")
+            return redirect("home-page")
+
     formC = ContactUsForm()
     return render(request, "blog/contact-us.html", {"formC":formC})
 

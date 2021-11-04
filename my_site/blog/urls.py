@@ -19,4 +19,6 @@ urlpatterns = [
     path("profile/",views.profile_view, name="user-profile"),
     path("add_tag/",views.add_tag_view, name="add-tag"),
     path("logout/",views.logout_view, name="user-logout"),
+    path("like-post/<slug:slug>", views.like_post_view, name="like-post"),
+    path("like-comment/<slug:slug>", views.like_comment_view, name="like-comment"),
 ]

@@ -153,3 +153,4 @@ class ContactUsForm(forms.Form):
     name = forms.CharField()
     phone = forms.CharField(validators= [phone_number_validator])
     subject = forms.CharField()
+    body = forms.CharField()
