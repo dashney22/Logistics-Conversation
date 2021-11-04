@@ -17,4 +17,6 @@ urlpatterns = [
     path("profile/",views.profile_view, name="user-profile"),
     path("add_tag/",views.add_tag_view, name="add-tag"),
     path("logout/",views.logout_view, name="user-logout"),
+    path("about/", views.about_us, name="about-us"),
+    path("contact/", views.contact_us, name="contact-us"),
 ]

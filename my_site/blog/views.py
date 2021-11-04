@@ -129,7 +129,7 @@ def register_view(request):
             else:
                 messages.error(request,f"Error with profile creation page. Please ensure that profile information is correct")
         else:
-            message.error(request,f"Error with user information. Please ensure that the user information is correct.")
+            messages.error(request,f"Error with user information. Please ensure that the user information is correct.")
 
     formU = UserRegistrationForm()
     formP = ProfileRegistrationForm()
@@ -182,3 +182,9 @@ def what_if_view(request):
 def research_community(request):
 
     return render(request, "blog/research-community.html",)
+
+def about_us(request):
+    return render(request,'blog/about_us.html',{})
+
+def contact_us(request):
+    return render(request,'blog/contact.html',{})

@@ -10,7 +10,6 @@
 
 {% block content %}
   <section id="summary">
-      <a href="{{post.slug}}/edit" class="btn btn-info">Edit Post</a>
       <h2>{{post.title}}</h2>
       <div>
           {%for tag in tags %}
@@ -25,13 +24,12 @@
   </section>
 
   <main>
-      {{post.content}}
-      
+    {{post.content}}
   </main>
-
-  <h2> Comments..</h2>
+  <main>
+    <h2> Comments..</h2>
     {% if not comments.all %}
-        No Comments Yet.... <a href="{%url 'add-comment'%}">Add Comment</a>
+        No Comments Yet.... <a href="">Add Comment</a>
     {% else %}
         {% for comment in comments.all %}
             <strong>
@@ -39,21 +37,27 @@
                 {{comment.date_added}}
             </strong>
             {{comment.body}}
-            <hr>
+            <br>
+            
         {% endfor%}
     {% endif %}
     <hr>
-  <h2> Add a new comment</h2>
-  <div class="row mr-10"> 
-    <div class="col-md-6">
-      <form method="POST" enctype="multipart/form-data"> 
-        {% csrf_token %}
-        {{formC.as_p}}
-        <button type="submit" class="btn btn-light">Post</button>
-    </form>    
+    <h2> Add a new comment</h2>
+    <div class="row mr-10"> 
+        <div class="col-md-6">
+            <form method="POST" enctype="multipart/form-data"> 
+              {% csrf_token %}
+              {{formC.as_p}}
+              <button type="submit" class="btn btn-success">Post</button>
+            </form>    
+        </div>
     </div>
-    <div class="col-md-6">
-      
-  </div>
+  </main>
+      <hr>
+    
+    <main>
+      <a class="btn btn-info"href="{{post.slug}}/edit"> Update</a>
+      <a href="{%url 'share-thoughts'%}" class="btn btn-secondary">Back</a>
+    </main>
   
 {% endblock %}

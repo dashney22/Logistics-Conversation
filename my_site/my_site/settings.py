@@ -76,17 +76,25 @@ WSGI_APPLICATION = 'my_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+#DATABASES ={
+#    'default':{
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME' : os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
+#}
+
 DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            # 'NAME': 'pbsportaldatabase',
+          # 'NAME': 'pbsportaldatabase',
             'NAME': 'logistics_conversation_database',
             'USER': 'django',
             'PASSWORD': 'p1234567',
             'HOST': '127.0.0.1',
             'PORT': '',
-        }
-    }
+       }   
+}
+
     #Gmail Details
     # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     # EMAIL_HOST = 'smtp.gmail.com'

@@ -1,11 +1,24 @@
-{% extends "blog/base.html"%}
+{% extends 'blog/base.html'%}
 {% load static %}
-
-{%block css_file%} 
- <link rel="stylesheet", href="{% static "blog/post.css"%}">
- <link rel="stylesheet" href="{% static "blog/all-posts.css" %}">
-{%endblock%}
-
+{% block css_file%}
+    <link rel="stylesheet" href="{% static 'blog/about.css'%}">
+    
+{% endblock %}
 {% block content %}
-
+<div class="container">
+    <div class="row content">
+        <div class="col-md-6 text-left">
+            <img src= "{% static 'images/pbs_blur.jpeg' %}" class="logisti_image">
+        </div>
+      <div class="col-md-6 text-right about_content">
+        <h2 style="text-align: center; margin-top: 50px; color: #012c50; font-family: Times, serif;"><strong>WHO, WHAT AND WHY?</strong> </h2> <hr>
+        <h5 style="text-align: center;">The Logistics Conversation is an Initiative by CSIR Smart Mobility. This Conversation about South African, regional, and African logistics
+            research describes the players, defines the landscape, identifies the evidence gaps, and develops an ongoing research agenda for improved logistics performance. <br>
+            Map your work, share your views, and participate towards progess.
+        </h5>
+  
+      </div>
+    </div>
+</div>
+    
 {% endblock %}
