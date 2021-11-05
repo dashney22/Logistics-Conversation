@@ -1,8 +1,6 @@
 {% extends "blog/base.html"%}
 {% load static %}
 
-{%block title%} {{post.title}} {% endblock %}
-
 {%block css_file%} 
  <link rel="stylesheet", href="{% static "blog/contact.css"%}">
 {%endblock%}
@@ -11,15 +9,14 @@
 {% block content %}
 <div class="wrap">
     <div class="margin">
-        <h2> Register</h2>
+        <h2>CONTACT US</h2> <br><br>
     </div>
     <form method="POST" enctype="multipart/form-data"> 
         {% csrf_token %}
-        {{formU.as_p}}
-        {{formP.as_p}}
-        <button type="submit" class="btn btn-light">Submit</button>
-    </form>
+        {{formC.as_p}}
+        <button type="submit" class="btn btn-light">Contact us</button>
+    </form> 
 </div>
-    
+   
 
 {% endblock %}

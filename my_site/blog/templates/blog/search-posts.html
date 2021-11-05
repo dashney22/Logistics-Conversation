@@ -1,0 +1,46 @@
+{% extends "blog/base.html"%}
+{% load static %}
+
+{%block title%} All My Posts {% endblock %}
+
+{%block css_file%} 
+ <link rel="stylesheet", href="{% static "blog/post.css"%}">
+ <link rel="stylesheet" href="{% static "blog/all-posts.css" %}">
+{%endblock%}
+
+
+{% block content %}
+<section id="search-posts">
+    <h2> Search posts</h2>
+    <a href="{%url 'share-thoughts'%}" class="btn btn-info">Back to all posts</a>
+    <form class="form-inline my-2 my-lg-0" action="{% url 'post-search' %}" method="GET" value="{{request.GET.search_bar}}">
+        <div class="row">
+            <div class="col-md-8"><input class="form-control mr-sm-2" name="search_bar" type="text" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="search_submit" value="Search" >Search</button> <br></div>
+            {% if user.is_authenticated %}
+            <div class="col-md-4"><a href="{% url 'add-post'%}" class="btn btn-success"><span class="glyphicon glyphicon-add"> Add Post</span> </a></div>
+            {% endif %}
+        </div>
+        
+      </form> <br><br>
+    <ul class="post_list">
+    
+
+        {%if request.GET.search_bar != '' %}
+        
+        {% if posts %}
+        <h1>Results for <b>{{ request.GET.q }}</b></h1>
+        <br/><br/>
+
+        {% for post in posts%}
+            {%include "blog/includes/post.html"%}
+        {% endfor %}
+
+        {% else %}
+        <p>No search results for this query</p> 
+        {% endif %}
+        {% endif %}
+        
+    </ul>
+</section>
+{% endblock %}

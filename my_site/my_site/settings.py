@@ -96,13 +96,13 @@ DATABASES = {
 }
 
     #Gmail Details
-    # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    # EMAIL_HOST = 'smtp.gmail.com'
-    # EMAIL_USE_TLS = True
-    # EMAIL_PORT = 587
-    # EMAIL_HOST_USER = 'emailspbstest@gmail.com'
-    # EMAIL_HOST_PASSWORD = 'PBS_Test_Email_1'
-    # EMAIL_PBS_RECEIVER = EMAIL_HOST_USER
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'logisticsconversation@gmail.com'
+EMAIL_HOST_PASSWORD = 'Logistics_Conversation_~!@#$'
+EMAIL_PBS_RECEIVER = EMAIL_HOST_USER
 
 
 # Password validation

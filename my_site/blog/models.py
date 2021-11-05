@@ -71,7 +71,11 @@ class Comment(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     body = models.TextField()
     image = models.ImageField(upload_to="posts/", blank=True, null = True)
+    likes = models.ManyToManyField(User, related_name="comment_likes")
 
+    def total_likes(self):
+        return self.likes.count()
+        
     def __str__(self):
         return '%s - %s' %(self.post.title, self.name)
 
