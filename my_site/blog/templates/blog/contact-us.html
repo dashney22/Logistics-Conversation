@@ -2,21 +2,20 @@
 {% load static %}
 
 {%block css_file%} 
- <link rel="stylesheet", href="{% static "blog/contact.css"%}">
+ <link rel="stylesheet", href="{% static "blog/post-detail.css"%}">
 {%endblock%}
 
 
 {% block content %}
-<div class="wrap">
-    <div class="margin">
-        <h2>CONTACT US</h2> <br><br>
-    </div>
-    <form method="POST" enctype="multipart/form-data"> 
-        {% csrf_token %}
-        {{formC.as_p}}
-        <button type="submit" class="btn btn-light">Contact us</button>
-    </form> 
-</div>
-   
+<center><h2 style="margin: 10px;"> Contact Us</h2></center>
+<main>
+        <form method="POST" enctype="multipart/form-data"> 
+            {% csrf_token %}
+            {{formC.as_p}}
+            <button type="submit" class="btn btn-light">Contact us</button>
+        </form> 
+       
+</main>
+
 
 {% endblock %}

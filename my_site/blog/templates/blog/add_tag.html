@@ -8,11 +8,14 @@
 
 
 {% block content %}
-<h1>Create a new dicussion topic tag</h1>
-<form method="POST" enctype="multipart/form-data"> 
-    {% csrf_token %}
-    {{formT.as_p}}
-    <button type="submit" class="btn btn-light">Add tag</button>
-</form>    
+<center><h2 style="margin: 10px;"> Add a Discussion Tag</h2></center>
+<main>
+    <form method="POST" enctype="multipart/form-data"> 
+        {% csrf_token %}
+        {{formT.as_p}}
+        <button type="submit" class="btn btn-light">Add tag</button>
+    </form> 
+</main>
+   
 
 {% endblock %}

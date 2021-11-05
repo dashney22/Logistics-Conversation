@@ -57,10 +57,10 @@ class UserRegistrationForm(forms.Form):
             self.add_error(None,ValidationError("Username cannot be blank"))
             
 
-        if (len(Users.objects.filter(username=username)) != 0):
+        if (len(User.objects.filter(username=username)) != 0):
             self.add_error(None,ValidationError("Username already exists"))
 
-        if (len(Users.objects.filter(email=email)) != 0):
+        if (len(User.objects.filter(email=email)) != 0):
             self.add_error(None,ValidationError("Email address already exists"))
         
         if (p1 != ""):
