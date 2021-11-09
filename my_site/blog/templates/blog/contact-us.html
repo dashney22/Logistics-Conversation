@@ -7,12 +7,12 @@
 
 
 {% block content %}
-<center><h2 style="margin: 10px;"> Contact Us</h2></center>
+<center><h2 style="margin: 10px; color: #012c50;"> Contact Us</h2></center>
 <main>
         <form method="POST" enctype="multipart/form-data"> 
             {% csrf_token %}
             {{formC.as_p}}
-            <button type="submit" class="btn btn-light">Contact us</button>
+            <button type="submit" class="btn btn-light">Submit</button>
         </form> 
        
 </main>

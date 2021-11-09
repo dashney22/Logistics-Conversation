@@ -36,7 +36,7 @@
         <form action="{% url 'like-post' post.slug %}" method="POST">
           {% csrf_token%}
       
-          {% if liked%}
+          {% if request.user in post.likes.all%}
               <button type="submit", name="post_id", value="{{post.id}}",
               class="btn btn-danger btn-sm">Unlike</button>
           {% else %}
@@ -72,7 +72,7 @@
                   {% endif%}
                       
                   
-                  - {{comment.total_likes}} likes <a href="" class="btn btn-info">Reply</a>
+                  - {{comment.total_likes}} likes
                   <hr>
               </form>
             {% endfor%}

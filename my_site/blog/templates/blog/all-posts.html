@@ -11,7 +11,7 @@
 
 {% block content %}
 <section id="all-posts">
-    <h2> All Posts </h2>
+    <h2 style="color: #012c50;"> All Posts </h2>
     <div class="row">
         <div class="col-md-6 text-left">
           <form class="form-inline my-2 my-lg-0" action="{% url 'post-search' %}" method="GET" value="{{request.GET.search_bar}}">
