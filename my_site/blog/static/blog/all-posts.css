@@ -14,14 +14,14 @@ body {
     max-width: 60rem;
   }
   
-   h2 {
+   #all-posts h2 {
     text-align: center;
     font-size: 2rem;
-    color: #2e2e2e;
+    color: #012c50;
     margin: 3rem 0;
   }
   
-  ul.post_list {
+  ul {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -30,12 +30,12 @@ body {
     gap: 1.5rem;
   }
   
-  .post img {
+.post img {
     width: 7rem;
     height: 7rem;
   }
   
-  .post a {
+.post a {
     height: 22rem;
     transform-origin: center;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);

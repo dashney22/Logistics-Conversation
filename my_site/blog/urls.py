@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import DeletePostView
 # from .views import CreatePost
 
 urlpatterns = [
@@ -21,4 +22,6 @@ urlpatterns = [
     path("logout/",views.logout_view, name="user-logout"),
     path("like-post/<slug:slug>", views.like_post_view, name="like-post"),
     path("like-comment/<slug:slug>", views.like_comment_view, name="like-comment"),
+    path("post/<int:pk>/delete", views.delete_comment, name="delete-comment"),
+    path("post/<slug:slug>/delete", DeletePostView.as_view(), name="delete-post"),
 ]

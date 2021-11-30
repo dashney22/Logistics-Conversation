@@ -1,8 +1,10 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from .models import Post, Tag, Profile, Comment
+from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views.generic import CreateView
+from django.views.generic.edit import DeleteView
 from .forms import EditPostForm, UserRegistrationForm, ProfileRegistrationForm, ProfileUpdateForm, CreatePostForm, CreateTagForm, CreateCommentForm, ContactUsForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -11,10 +13,7 @@ from .email_functions import query_notification
 
 from django.urls import reverse_lazy, reverse
 # Create your views here.
-all_posts = [
-    
-    
-]
+
 @login_required(login_url="user-login")
 def create_post_view(request):
     author = request.user
@@ -283,6 +282,13 @@ def posts_search_view(request):
         return render(request, 'search/search-posts.html')
 
 
-    
+def delete_comment(request, pk):
+     comment = Comment.objects.filter(post=pk).last()
+     if comment:
+         comment.delete()
+     return redirect('share-thoughts')
 
-
+class DeletePostView(DeleteView):
+    model = Post
+    template_name ="blog/delete_post.html"
+    success_url = reverse_lazy("share-thoughts")
