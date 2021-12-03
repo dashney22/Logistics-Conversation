@@ -17,7 +17,7 @@ body {
    #all-posts h2 {
     text-align: center;
     font-size: 2rem;
-    color: #012c50;
+    color: #2e2e2e;
     margin: 3rem 0;
   }
   
@@ -30,12 +30,12 @@ body {
     gap: 1.5rem;
   }
   
-.post img {
+  .post img {
     width: 7rem;
     height: 7rem;
   }
   
-.post a {
+  .post a {
     height: 22rem;
     transform-origin: center;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);

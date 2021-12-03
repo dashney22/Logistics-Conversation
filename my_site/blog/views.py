@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views.generic import CreateView
-from django.views.generic.edit import DeleteView
+from django.views.generic.edit import DeleteView, UpdateView
 from .forms import EditPostForm, UserRegistrationForm, ProfileRegistrationForm, ProfileUpdateForm, CreatePostForm, CreateTagForm, CreateCommentForm, ContactUsForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -292,3 +292,9 @@ class DeletePostView(DeleteView):
     model = Post
     template_name ="blog/delete_post.html"
     success_url = reverse_lazy("share-thoughts")
+
+@login_required(login_url="user-login")
+class EditPostView(UpdateView):
+    model = Post
+    template_name = 'update_post.html'
+    fields = ['title','excerpt','image','content','tags']
