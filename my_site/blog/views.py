@@ -242,7 +242,11 @@ def research_agenda_view(request):
 
 def about_us_view(request):
 
-    return render(request, "blog/about_us.html",)
+    return render(request, "blog/about.html",)
+
+def about_us_process_view(request):
+
+    return render(request, "blog/process.html",)
 
 def what_if_view(request):
 

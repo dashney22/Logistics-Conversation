@@ -1,0 +1,32 @@
+{% extends 'blog/base.html'%}
+{% load static %}
+{% block css_file%}
+    <link rel="stylesheet" href="{% static 'blog/about.css'%}">
+    
+{% endblock %}
+{% block content %}
+<div class="container" style="margin-top: 20px;">
+   <div class="jumbotron">
+       
+       <h3 style="margin-bottom: 20px;">Towards a Logistics Research Agenda and Roadmap</h3>
+
+       <p> The underperformance of the national logistics system is hampering South Africa’s economic performance and is affecting its international competitiveness.
+           Excellent logistics research is undertaken by academic institutions and private organisations, and the opportunity exists to unlock the value of such research for systemic improvement. <br><br>
+           CSIR’s Smart Mobility cluster plays an integrative and catalytic role in the national logistics landscape, and focuses on translating research into impact. To this end, it is developing
+            a research agenda and roadmap for improvements to the national logistics system.<br><br>
+            This initiative recognizes the opportunity to develop evidence in support of improvements to the national logistics system. It acknowledges areas of excellence in logistics research, and the opportunity to align such work in an integrative manner for systemic improvement.
+             A number of research areas remain unattended to, and this leaves opportunity to refocus and develop a scientific knowledge base to fill these gaps.<br><br>
+             The vision of the national logistics research agenda and roadmap initiative is to provide a framework within which to stimulate innovation and R&D, and to identify and catalyse areas of human capital development (HCD).<br><br>
+             A coordinated national logistics research agenda and roadmap is expected to support the performance of the logistics system by providing a knowledge base to inform:
+             <ul>
+                 <li>Evidence-based policy development</li>
+                 <li>More effective decision-making</li>
+                 <li>A focus on appropriate skills development</li>
+                 <li>Appropriate technology adoption that is aligned with technology readiness</li>
+             </ul>
+        </p>
+        <p><a class="btn btn-primary btn-lg" href="{% url 'process' %}" role="button">Click To View The Process</a></p> 
+   </div>
+</div>
+    
+{% endblock %}

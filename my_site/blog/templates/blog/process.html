@@ -1,0 +1,32 @@
+{% extends 'blog/base.html'%}
+{% load static %}
+{% block css_file%}
+    <link rel="stylesheet" href="{% static 'blog/about.css'%}">
+    
+{% endblock %}
+{% block content %}
+<div class="container" style="margin-top: 20px;">
+   <div class="jumbotron">
+       
+       <h3 style="margin-bottom: 20px;">The Roadmap and Agenda Development Process</h3>
+
+       <p> An interactive, consultative process is in progress to develop the national logistics research agenda and roadmap.
+            This online data collection tool provides an open platform by which stakeholders can contribute their perspectives on what we do not yet know,
+             and what we should know more of, to inform our understanding of the national logistics system and to facilitate improvement. The steps are as follows:
+             
+             <ol>
+                 <li> Online Data Collection</li>
+                 <li> Small Focus Group Sessions</li>
+                 <li> Version1 Roadmap</li>
+                 <li> Expert Review</li>
+                 <li> Final Roadmap and Agenda</li>
+             </ol>
+        </p> <br>
+        <p>The online data collection process is augmented by small focus group discussions to enhance the collected and collective understanding,
+             and to shape a guiding agenda and roadmap.Expert review of the Version 1 roadmap will lead to the publication of the final agenda and roadmap.</p>
+
+        <p><a class="btn btn-primary btn-lg" href="{% url 'about-us' %}" role="button">Overview</a></p> 
+   </div>
+</div>
+    
+{% endblock %}

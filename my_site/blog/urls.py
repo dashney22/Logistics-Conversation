@@ -14,6 +14,7 @@ urlpatterns = [
     path("what-if/", views.what_if_view, name="what-if"),
     path("contact-us/", views.contact_us_view, name="contact-us"),
     path("about-us/", views.about_us_view, name="about-us"),
+    path("process/", views.about_us_process_view, name="process"),
     path("posts/<slug:slug>/edit", views.edit_post_view, name="edit-post-page"),
     path("register/", views.register_view, name="register-user"),
     path("login/",views.login_view, name="user-login"),
