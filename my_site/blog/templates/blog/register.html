@@ -15,6 +15,30 @@
                 {% csrf_token %}
                 {{formU.as_p}}
                 {{formP.as_p}}
+
+                <div class="jumbotron">
+                    <h4 style="margin-bottom: 20px;"> Disclaimer</h4>
+
+                    <p>
+                        <ol>
+                            <li><strong>User Profile.</strong>
+                                By registering with the logistics Conversation, you are giving us your personal information including, name, email address,
+                                 date of birth(where applicable),piuctures and information you disclose on your profile
+                            </li>
+                            <li><strong>User Content and Behavioural Pattern.</strong>
+                                You are giving us permission to process the information you provide, including your posts, videos and comments made. 
+                                We collect user content through pre-loading at the time of creation, import or upload.
+                            </li>
+                        </ol>
+                        
+                    </p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                        AGREE
+                        </label>
+                    </div>
+                </div>
                 <button type="submit" class="btn btn-light">Submit</button>
             </form>
     </main>

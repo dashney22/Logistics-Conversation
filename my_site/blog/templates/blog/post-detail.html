@@ -57,16 +57,18 @@
       </form>
   
       <h2> Comments..</h2>
-        {% if not comments.all %}
-            No Comments Yet.... 
-        {% else %}
+      {% if user.is_authenticated %}
+
+          {% if not comments.all %}
+              No Comments Yet.... 
+          {% else %}
             {% for comment in comments.all %}
-                  <strong>
-                      {{comment.commentor.username}} -
-                      {{comment.date_added}}
-                  </strong>
-                  {{comment.body}}
-                  
+                <strong>
+                    {{comment.commentor.username}} -
+                    {{comment.date_added}}
+                </strong>
+                {{comment.body}}
+            
                   <form action="{% url 'like-comment' post.slug %}" method="POST">
                       {% csrf_token%}
               
@@ -85,11 +87,14 @@
                           <a href="{% url 'delete-comment' post.pk %}" class="btn btn-danger">Delete</a>
                       {% endif %}
 
-                </form>
-              <br>
-            {% endfor %}   
-            <hr>
-        {% endif %}
+                  </form>
+                <br>
+              {% endfor %}   
+                <hr>
+            {% endif %}
+
+       {% endif %}
+       
 
           <h2> Add a new comment</h2>
           {% if user.is_authenticated %}
