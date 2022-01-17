@@ -31,12 +31,14 @@ class UserRegistrationForm(forms.Form):
     last_name = forms.CharField(label = "Enter your last name")
     p1 = forms.CharField(label = "Enter your password", widget = forms.PasswordInput())
     p2 = forms.CharField(label = "Confirm your password", widget = forms.PasswordInput())
+    checked = forms.BooleanField(label= "Agree Disclaimer")
 
     def save(self,commit= True):
         user = User.objects.create_user(username = self.cleaned_data['username'],
                                         email = self.cleaned_data['email'],
                                         first_name = self.cleaned_data['first_name'],
                                         last_name = self.cleaned_data['last_name'],
+                                        checked = self.cleaned_data['checked'],
                                         password = self.cleaned_data['p2']
                                         )
 
@@ -47,9 +49,15 @@ class UserRegistrationForm(forms.Form):
         cleaned_data = super(UserRegistrationForm,self).clean()
         username = cleaned_data.get('username')
         email = cleaned_data.get('email')
+        checked = cleaned_data.get('checked')
         p1 = cleaned_data.get('p1')
         p2 = cleaned_data.get('p2')
         print("In user registration clean")
+
+        if(not checked):
+            self.add_error(None,ValidationError("Please Agree to the Disclaimer"))
+
+
         if (username != ""):
             if any(c in illegal_symbols for c in username):
                 self.add_error(None,ValidationError("Username contains illegal symbols, please use only letters, numbers and ',','.'"))

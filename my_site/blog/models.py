@@ -30,7 +30,8 @@ titles = (("mr","Mr."),
 
 class User(AbstractUser):
     email = models.EmailField( null = False, blank = False)
-
+    checked = models.BooleanField(default= False)
+    
     def __str__(self):
         return self.first_name +" " + self.last_name
 
