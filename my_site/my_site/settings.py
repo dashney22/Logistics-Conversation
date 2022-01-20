@@ -152,6 +152,9 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = "/media/"
 
+SESSION_COOKIE_AGE = 15*60
+SESSION_SAVE_EVERY_REQUEST= True
+
 
 
 from django.contrib.messages import constants as messages

@@ -204,6 +204,39 @@ def add_tag_view(request):
 
     return render(request, "blog/add_tag.html", {"formT":formT})
 
+
+@login_required(login_url="user-login")
+def add_tag_from_post_view(request,slug):
+
+    if request.method == "POST":
+        formT = CreateTagForm(request.POST)
+        
+
+        if formT.is_valid():
+            tag = formT.save()
+            post_information = get_object_or_404(Post,slug=slug)
+            post_information.tags.add(tag) 
+            # post_information.save()
+            author = post_information.author
+            comments = Comment.objects.filter(post_id=post_information)
+            formC = CreateCommentForm(initial={"body":"", "image":None})
+            edit_rights = True if author == request.user else False
+            return HttpResponseRedirect(reverse('post-detail-page', args=(post_information.slug,)))
+            # return render(request,"blog/post-detail.html",{
+            #     "post": post_information,
+            #     "tags" : post_information.tags.all(),
+            #     "comments": comments,
+            #     "formC" : formC,
+            #     "edit_rights": edit_rights,
+            # })
+
+        else:
+            messages.error(request,f"Error with tag creation. Please ensure all tag information is provided")
+
+    formT = CreateTagForm(initial={"caption":"", "description":""})
+
+    return render(request, "blog/add_tag.html", {"formT":formT})
+
 def logout_view(request):
 	logout(request)
 	messages.info(request,f"Logged out successfully!")
