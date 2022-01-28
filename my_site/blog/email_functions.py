@@ -11,8 +11,8 @@ def query_notification(request,email,name,phone,subject,body):
 	subject = name +" : "+ subject
 	message = body
 	message = message +"\n\n From: \n {}".format(email)
-	email_from = settings.EMAIL_PBS_RECEIVER
-	recipient_list = [settings.EMAIL_PBS_RECEIVER,email]
+	email_from = settings.EMAIL_HOST_USER
+	recipient_list = [settings.EMAIL_HOST_USER,email]
 	email = EmailMessage(subject=subject,body=message,from_email=email_from,to=recipient_list)
 	email.send()
 	# send_mail( subject, message, email_from, recipient_list )

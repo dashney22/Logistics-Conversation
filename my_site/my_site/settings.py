@@ -11,21 +11,38 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 from pathlib import Path
 import os
+import dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+dotenv_file = os.path.join(BASE_DIR, ".env")
+#Loads the variables if the file existist
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
+
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+# SECURITY WARNING: don't run with debug turned on in production!
+
+LOCAL = os.environ.get("LOCAL")
+if type(LOCAL) != 'bool':
+    if LOCAL == 'True':
+        LOCAL = True
+        DEBUG = True
+    else:
+        LOCAL = False
+        DEBUG = False
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '%4j!st)u^d_(xj-=#b5oqg(ile=(ji_mkexdmgnd#^u8y2^^b*'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['logisticsconversation.csir.co.za',
+                 '146.64.54.223',
+                 '127.0.0.1']
 
 
 # Application definition
@@ -87,24 +104,20 @@ WSGI_APPLICATION = 'my_site.wsgi.application'
 DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-          # 'NAME': 'pbsportaldatabase',
-            'NAME': 'logistics_conversation_database',
-            'USER': 'django',
-            'PASSWORD': 'p1234567',
-            'HOST': '127.0.0.1',
-            'PORT': '',
-       }   
-}
-
-    #Gmail Details
+            'NAME': os.environ.get("DATABASE_NAME"),
+            'USER': os.environ.get("DATABASE_USER"),
+            'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
+            'HOST': os.environ.get("DATABASE_HOST"),
+            'PORT': os.environ.get("DATABASE_PORT"),
+        }
+    }
+#Email Details
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'logisticsconversation@gmail.com'
-EMAIL_HOST_PASSWORD = 'Logistics_Conversation_~!@#$'
-EMAIL_PBS_RECEIVER = EMAIL_HOST_USER
-
+EMAIL_PORT = os.environ.get("EMAIL_HOST_PORT")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -142,7 +155,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/staticfiles/' #check if this needs to be staticfiles
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 CRISPY_TEMPLATE_PACK = 'uni_form'
 
@@ -154,6 +167,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = "/media/"
 
 
+SESSION_COOKIE_AGE = 15*60
+SESSION_SAVE_EVERY_REQUEST= True
+
 
 from django.contrib.messages import constants as messages
 
@@ -164,3 +180,4 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
