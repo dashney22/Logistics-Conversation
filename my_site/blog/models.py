@@ -73,12 +73,23 @@ class Comment(models.Model):
     body = models.TextField()
     image = models.ImageField(upload_to="posts/", blank=True, null = True)
     likes = models.ManyToManyField(User, related_name="comment_likes")
+    parent = models.ForeignKey('self', on_delete=models.CASCADE,blank=True,null=True, related_name='+')
 
     def total_likes(self):
         return self.likes.count()
         
     def __str__(self):
         return '%s - %s' %(self.post.title, self.name)
+
+    @property
+    def children(self):
+        return Comment.objects.filter(parent=self).order_by('-date_added').all()
+
+    @property
+    def is_parent(self):
+        if self.parent is None:
+            return True
+        return False
 
 class Profile (models.Model):
     user = models.OneToOneField(User, on_delete=CASCADE)

@@ -142,6 +142,11 @@ class CreateCommentForm(ModelForm):
             comment_c.save()
         return comment_c
 
+class CommentReplyForm(ModelForm):
+    class Meta:
+        model=Comment
+        fields = ("body",)
+
 def phone_number_validator(value):
     if value[0] == "0":
         if len(value) != 10:

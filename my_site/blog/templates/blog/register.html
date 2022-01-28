@@ -1,6 +1,8 @@
 {% extends "blog/base.html"%}
 {% load static %}
 
+{%load crispy_forms_tags%}
+
 {%block title%} {{post.title}} {% endblock %}
 
 {%block css_file%} 
@@ -14,7 +16,7 @@
             <form method="POST" enctype="multipart/form-data"> 
                 {% csrf_token %}
                 {{formU.as_p}}
-                {{formP.as_p}}
+                {{formP.as_p | crispy}}
 
                 <div class="jumbotron">
                     <h4 style="margin-bottom: 20px;"> Disclaimer: Privacy Statement</h4>

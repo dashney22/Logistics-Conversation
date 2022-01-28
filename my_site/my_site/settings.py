@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+
 AUTH_USER_MODEL = "blog.User"
 
 MIDDLEWARE = [
@@ -143,7 +144,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
+CRISPY_TEMPLATE_PACK = 'uni_form'
 
 STATICFILES_DIRS = [
 	os.path.join(BASE_DIR,'blog/static')
