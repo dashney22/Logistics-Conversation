@@ -96,7 +96,7 @@
                                 <div class="main-content-section">
                                   <blockquote class="blockquote">
                                     <p class="mb-2">{{comment.body}}</p>
-                                    <footer class="blockquote-footer"> by<cite titel="Source Title">{{comment.commentor}}</cite></footer>
+                                    <footer class="blockquote-footer"> by <cite titel="Source Title">{{comment.commentor.username|capfirst}}</cite></footer>
                                   </blockquote>
                                 </div>
                             {% endfor %}   
