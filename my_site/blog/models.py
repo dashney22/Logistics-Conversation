@@ -56,6 +56,8 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="posts")
     tags = models.ManyToManyField(Tag)
     likes = models.ManyToManyField(User, related_name="blog_likes")
+    liked = models.ManyToManyField(User, blank=True, related_name="liked")
+    disliked = models.ManyToManyField(User, blank=True, related_name="disliked")
     
     def total_likes(self):
         return self.likes.count()
@@ -72,8 +74,10 @@ class Comment(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     body = models.TextField()
     image = models.ImageField(upload_to="posts/", blank=True, null = True)
-    likes = models.ManyToManyField(User, related_name="comment_likes")
     parent = models.ForeignKey('self', on_delete=models.CASCADE,blank=True,null=True, related_name='+')
+    liked = models.ManyToManyField(User, blank=True, related_name="comment_liked")
+    disliked = models.ManyToManyField(User, blank=True, related_name="comment_disliked")
+    
 
     def total_likes(self):
         return self.likes.count()

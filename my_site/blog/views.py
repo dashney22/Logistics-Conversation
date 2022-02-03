@@ -5,13 +5,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views.generic import CreateView
 from django.views.generic.edit import DeleteView, UpdateView
-from .forms import EditPostForm, UserRegistrationForm, ProfileRegistrationForm, ProfileUpdateForm, CreatePostForm, CreateTagForm, CreateCommentForm, ContactUsForm
+from .forms import EditPostForm, UserRegistrationForm, ProfileRegistrationForm, ProfileUpdateForm, CreatePostForm, CreateTagForm, CreateCommentForm, ContactUsForm, CommentReplyForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import HttpResponseRedirect
 from .email_functions import query_notification
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
+from django.views import View
 # Create your views here.
 
 @login_required(login_url="user-login")
@@ -53,40 +53,34 @@ def posts_view(request):
         "posts" : all_posts
     })
 
-def like_post_view(request,slug):
-    post = get_object_or_404(Post,id=request.POST.get('post_id'))
-    
-    liked = False
-    if post.likes.filter(id=request.user.id).exists():
-        post.likes.remove(request.user)
-        liked = False
-    else:
-        post.likes.add(request.user)
-        liked = True
+#def like_post_view(request,slug):
+#    post = get_object_or_404(Post,id=request.POST.get('post_id'))
+#    liked = False
+#    if post.likes.filter(id=request.user.id).exists():
+#        post.likes.remove(request.user)
+#        liked = False
+#    else:
+#        post.likes.add(request.user)
+#        liked = True
+#    return HttpResponseRedirect(reverse('post-detail-page', args=[str(slug)]))
 
-    return HttpResponseRedirect(reverse('post-detail-page', args=[str(slug)]))
-
-
-def like_comment_view(request, slug ):
-    comment = get_object_or_404(Comment,id=request.POST.get('comment_id'))
-    
-    liked = False
-    if comment.likes.filter(id=request.user.id).exists():
-        comment.likes.remove(request.user)
-        liked = False
-    else:
-        comment.likes.add(request.user)
-        liked = True
-
-    return HttpResponseRedirect(reverse('post-detail-page', args=[str(slug)]))
-
+#def like_comment_view(request, slug ):
+#    comment = get_object_or_404(Comment,id=request.POST.get('comment_id'))  
+#    liked = False
+#    if comment.likes.filter(id=request.user.id).exists():
+#        comment.likes.remove(request.user)
+#        liked = False
+#    else:
+#        comment.likes.add(request.user)
+#        liked = True
+#    return HttpResponseRedirect(reverse('post-detail-page', args=[str(slug)]))
 
 def post_details_view(request, slug):
     identified_post = get_object_or_404(Post, slug=slug)
     #identified_post = next(post for post in crack_post if post["slug"]== slug)
     author = identified_post.author
     comments = Comment.objects.filter(post_id=identified_post)
-
+    total_comments = Comment.objects.filter(post_id=identified_post).count
     if request.method == "POST":
         formC = CreateCommentForm(request.POST)
 
@@ -103,7 +97,7 @@ def post_details_view(request, slug):
         else: 
             messages.error(request,("There was an issue with the comment"))
 
-    formC = CreateCommentForm(initial={"body":"", "image":None})
+    formC = CreateCommentForm()
     edit_rights = True if author == request.user else False
     return render(request,"blog/post-detail.html",{
         "post": identified_post,
@@ -111,6 +105,7 @@ def post_details_view(request, slug):
         "comments": comments,
         "formC" : formC,
         "edit_rights": edit_rights,
+        "total_comments":total_comments,
     })
 @login_required(login_url="user-login")
 def edit_post_view(request,slug):
@@ -302,3 +297,130 @@ class EditPostView(UpdateView):
     model = Post
     template_name = 'update_post.html'
     fields = ['title','excerpt','image','content','tags']
+
+class AddLikes(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        post = Post.objects.get(pk=pk)
+
+        disliked_post = False
+        for dislike in post.disliked.all():
+            if dislike==request.user:
+                disliked_post=True
+                break
+
+        if disliked_post:
+            post.disliked.remove(request.user)
+
+        is_like = False
+        for like in post.liked.all():
+            if like==request.user:
+                is_like=True
+                break
+        if not is_like:
+            post.liked.add(request.user)
+        
+        if is_like:
+            post.liked.remove(request.user)
+        
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
+
+class AddDislikes(LoginRequiredMixin,View):
+    def post(self, request, pk, *args, **kwargs):
+        post = Post.objects.get(pk=pk)
+
+        is_like = False
+        for like in post.liked.all():
+            if like==request.user:
+                is_like=True
+                break
+
+        if is_like:
+            post.liked.remove(request.user)
+
+        disliked_post = False
+
+        for dislike in post.disliked.all():
+            if dislike==request.user:
+                disliked_post=True
+                break
+
+        if not disliked_post:
+            post.disliked.add(request.user)
+
+        if disliked_post:
+            post.disliked.remove(request.user)
+
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
+
+class AddCommentLikes(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        comment = Comment.objects.get(pk=pk)
+
+        disliked_post = False
+        for dislike in comment.disliked.all():
+            if dislike==request.user:
+                disliked_post=True
+                break
+
+        if disliked_post:
+            comment.disliked.remove(request.user)
+
+        is_like = False
+        for like in comment.liked.all():
+            if like==request.user:
+                is_like=True
+                break
+        if not is_like:
+            comment.liked.add(request.user)
+        
+        if is_like:
+            comment.liked.remove(request.user)
+        
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
+
+class AddCommentDislikes(LoginRequiredMixin,View):
+    def post(self, request, pk, *args, **kwargs):
+        comment = Comment.objects.get(pk=pk)
+
+        is_like = False
+        for like in comment.liked.all():
+            if like==request.user:
+                is_like=True
+                break
+
+        if is_like:
+            comment.liked.remove(request.user)
+
+        disliked_post = False
+
+        for dislike in comment.disliked.all():
+            if dislike==request.user:
+                disliked_post=True
+                break
+
+        if not disliked_post:
+            comment.disliked.add(request.user)
+
+        if disliked_post:
+            comment.disliked.remove(request.user)
+
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
+
+class CommentReplyView(LoginRequiredMixin,View):
+    def post(self,request,post_pk,pk,*args,**kwargs):
+        post = Post.objects.get(pk=post_pk)
+        parent_comment = Comment.objects.get(pk=pk)
+
+        form = CreateCommentForm(request.POST)
+
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.commentor = request.user
+            new_comment.post = post
+            new_comment.parent = parent_comment
+            new_comment.save()
+        return redirect('share-thoughts',pk=post_pk)

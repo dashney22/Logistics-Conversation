@@ -1,0 +1,14 @@
+Revert "env added"
+
+This reverts commit 5d62ffc94363630944f393d62f6144cddda351ad.
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch styling
+# Your branch is ahead of 'origin/styling' by 27 commits.
+#   (use "git push" to publish your local commits)
+#
+# Changes to be committed:
+#	deleted:    my_site/env
+#

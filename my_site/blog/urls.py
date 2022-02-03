@@ -1,7 +1,6 @@
 from django.urls import path
 from . import views
-from .views import DeletePostView
-# from .views import CreatePost
+from .views import DeletePostView, AddDislikes,AddLikes, AddCommentDislikes, AddCommentLikes, CommentReplyView
 
 urlpatterns = [
     path("", views.starting_page_view, name="home-page"),
@@ -21,8 +20,13 @@ urlpatterns = [
     path("profile/",views.profile_view, name="user-profile"),
     path("add_tag/",views.add_tag_view, name="add-tag"),
     path("logout/",views.logout_view, name="user-logout"),
-    path("like-post/<slug:slug>", views.like_post_view, name="like-post"),
-    path("like-comment/<slug:slug>", views.like_comment_view, name="like-comment"),
+    #path("like-post/<slug:slug>", views.like_post_view, name="like-post"),
+    #path("like-comment/<slug:slug>", views.like_comment_view, name="like-comment"),
     path("post/<int:pk>/delete", views.delete_comment, name="delete-comment"),
-    path("post/<slug:slug>/delete", DeletePostView.as_view(), name="delete-post"),
+    path("post/<slug:pk>/delete", DeletePostView.as_view(), name="delete-post"),
+    path("post/<int:pk>/likes", AddLikes.as_view(), name="likes"),
+    path("post/<int:pk>/dislikes", AddDislikes.as_view(), name="dislikes"),
+    path("comment/<int:pk>/like", AddCommentLikes.as_view(), name="comment-likes"),
+    path("comment/<int:pk>/dislike", AddCommentDislikes.as_view(), name="comment-dislikes"),
+    path("post/<int:post_pk>/comment/<int:pk>/reply",CommentReplyView.as_view(),name="comment-reply"),
 ]
