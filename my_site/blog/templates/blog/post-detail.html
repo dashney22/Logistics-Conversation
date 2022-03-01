@@ -19,23 +19,19 @@
             {%for tag in tags %}
               <span class="tagged"> {{tag.caption}}</span>
             {% endfor%}
+
         </div>
+        <h6>
+          <p>By <strong>{{post.author}}</strong></p>
+            Last updated on <time> {{post.date |date:"d M Y" }}</time>
+        </h6>
         
-        <article>
-            <img src="{{post.image.url}}" alt="{{post.title}}">
-            <address>By {{post.author}}</address>
-            <div>Last updated on <time> {{post.date |date:"d M Y" }}</time></div>
-        </article>
   </section>
     {% if user.is_authenticated %}
             <main>
-          
-                {%if edit_rights %}
+                {%if request.user.username == post.author.username %}
                   <a href="{%url 'delete-post' post.slug%}" class="btn btn-danger"> Delete Post</a>
-                  <a href="{{post.slug}}/edit" class="btn btn-info">Edit Post</a>
-                {% else %}
-                  <button class="btn btn-danger" disabled=True>Delete Post</button>
-                  <a disabled=True class="btn btn-info">Edit Post</a>
+                  <a href="{%url 'post-edit' post.pk%}" class="btn btn-info">Edit Post</a>
                 {% endif %}
           
             </main>
@@ -100,23 +96,14 @@
                                 </div>                                          
                                 <br>
 
-                               <!-- <div class="row mr-10 d-none" id="{{comment.pk}}"> 
-                                  <div class="col-md-6">
-                                    <form method="POST" enctype="multipart/form-data"> 
-                                      
-                                      <button type="submit" class="btn btn-light">Submit</button>
-                                  </form>    
-                                  </div>
-                                  <div class="col-md-6"> </div>
-                                    
-                                </div>-->
+                             
                                 <div class="row justify-content-center mt-3 mb-5 d-none" id="{{comment.pk}}">
                                   <div class="col-md-5 col-sm-12">
-                                    <form method="POST">
+                                    <form method="POST" action = "{% url 'comment-reply' post.pk comment.pk %}">
                                       {% csrf_token %}
                                       {{formC.as_p}}
-                                      <div class="d-grip gap-2">
-                                        <button class="btn btn-success mt-3">Submit</button>
+                                      <div class="d-grid gap-2">
+                                        <button class="btn btn-success btn-block mt-3">Submit</button>
                                       </div>
                                     </form>
                                   </div>
@@ -129,11 +116,12 @@
                                             <strong>
                                               {{child_comment.commentor.username|capfirst}} -
                                               {{child_comment.date_added}}
-                                          </strong>
+                                            </strong>
                                           </p>
                                           <p>{{child_comment.body}}</p>
-                                          {%if request.user.username == child_comment.commentor.username %}
-                                          <a href="{% url 'delete-comment' post.pk %}"><i class=" fa fa-trash"></i></a>
+                                          {%if request.user == child_comment.commentor %}
+                                            <a href="{% url 'delete-comment' post.pk comment.pk %}"><i class=" fa fa-trash"></i>
+                                            </a>
                                           {% endif %}
                                       </div>
                                     </div>
@@ -150,24 +138,22 @@
           
               
 
-                  <h2> Add a new comment</h2>
+                 
                   {% if user.is_authenticated %}
+                  <h2> Add a new comment</h2>
                     <div class="row mr-10"> 
-                      <div class="col-md-6">
+                      <div class="col-md-12">
                         <form method="POST" enctype="multipart/form-data"> 
                           {% csrf_token %}
                           {{formC.as_p}}
-                          <button type="submit" class="btn btn-light">Post</button>
-                      </form>    
-                      </div>
-                      <div class="col-md-6"> </div>
+                          <div class="d-grid gap-2">
+                            <button class="btn btn-success" type="submit">Submit</button>
+                          </div>
+                        </form>    
+                    </div>
                         
                     </div>
-                  {% else %}
-                      
-                        <div class="col-md-6">
-                          
-                      </div>
+                    
                   {% endif %}
             </main>
       {%else%}

@@ -24,6 +24,12 @@ body {
     font-size: 4.5rem;
     margin-bottom: 0.25rem;
   }
+  #summary h6{
+    color: white;
+    margin-top: 20px;
+    margin-bottom: 3px;
+    
+  }
   
   #summary article {
     position: absolute;
@@ -34,15 +40,7 @@ body {
     text-align: right;
     color: white;
   }
-  
-  #summary article img {
-    width: 12rem;
-    height: 12rem;
-    border-radius: 12px;
-    transform: rotateZ(5deg);
-    border: 5px solid white;
-    margin-bottom: 1rem;
-  }
+
   
   #summary address {
     font-weight: bold;
@@ -77,4 +75,7 @@ body {
   }
   .child-comment{
     margin-left: 2rem;
+  }
+  #summary .article-text{
+    color:white;
   }

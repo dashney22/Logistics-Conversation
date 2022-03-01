@@ -11,14 +11,39 @@
 {% block content %}
 <center><h2 style="margin: 10px;"> Delete Post</h2></center>
 
-<div class="form-group">
+<!--<div class="form-group">
     <form method="POST" enctype="multipart/form-data"> 
         {% csrf_token %}
         {{form.as_p}}
-        <strong>Do ypu really want to delete the post?</strong> <br>
+        <strong>Do you really want to delete the post?</strong> <br>
         <button type="submit" class="btn btn-danger">Delete</button>
         <a href="{% url "post-detail-page" post.slug %}" class="btn btn-secondary">Back</a>
     </form>
-</div>  
+</div>  -->
+
+<div class="container">
+
+    <div class="row mt-5">
+        <div class="col-md-5 col-sm-6">
+            <a href="{% url "post-detail-page" object.slug %}" class="btn btn-light">Back to Post</a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3 mb-5">
+        <div class="col-md-5 col-sm-12">
+          <form method="POST">
+            {% csrf_token %}
+            <h5> Are You Sure?</h5>
+            <p>You are about to delete this post, this cannot be undone!</p>
+            <div class="d-grid gap-2">
+              <button class="btn btn-danger mt-3">Delete!</button>
+            </div>
+          </form>
+        </div>
+    </div>
+
+</div>
+
+
   
 {% endblock %}

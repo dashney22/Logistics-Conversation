@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views.generic import CreateView
 from django.views.generic.edit import DeleteView, UpdateView
-from .forms import EditPostForm, UserRegistrationForm, ProfileRegistrationForm, ProfileUpdateForm, CreatePostForm, CreateTagForm, CreateCommentForm, ContactUsForm, CommentReplyForm
+from .forms import EditPostForm, UserRegistrationForm, CreatePostForm, CreateTagForm, ContactUsForm,UpdatedCommentForm, CommentReplyForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .email_functions import query_notification
@@ -53,60 +53,86 @@ def posts_view(request):
         "posts" : all_posts
     })
 
-#def like_post_view(request,slug):
-#    post = get_object_or_404(Post,id=request.POST.get('post_id'))
-#    liked = False
-#    if post.likes.filter(id=request.user.id).exists():
-#        post.likes.remove(request.user)
-#        liked = False
-#    else:
-#        post.likes.add(request.user)
-#        liked = True
-#    return HttpResponseRedirect(reverse('post-detail-page', args=[str(slug)]))
 
-#def like_comment_view(request, slug ):
-#    comment = get_object_or_404(Comment,id=request.POST.get('comment_id'))  
-#    liked = False
-#    if comment.likes.filter(id=request.user.id).exists():
-#        comment.likes.remove(request.user)
-#        liked = False
-#    else:
-#        comment.likes.add(request.user)
-#        liked = True
-#    return HttpResponseRedirect(reverse('post-detail-page', args=[str(slug)]))
+class PostDetailView(View):
 
-def post_details_view(request, slug):
-    identified_post = get_object_or_404(Post, slug=slug)
-    #identified_post = next(post for post in crack_post if post["slug"]== slug)
-    author = identified_post.author
-    comments = Comment.objects.filter(post_id=identified_post)
-    total_comments = Comment.objects.filter(post_id=identified_post).count
-    if request.method == "POST":
-        formC = CreateCommentForm(request.POST)
+    def get(self, request, pk, *args, **kwargs):
+        post = Post.objects.get(pk=pk)
+        form  = UpdatedCommentForm()
+        comments = Comment.objects.filter(post=post).order_by('-date_added')
+        author = post.author
+        tags = post.tags.all()
+        total_comments = Comment.objects.filter(post_id=post).count
+        edit_rights = True if author == request.user else False
 
-        if formC.is_valid():
-            print(request.FILES)
-            if (request.FILES):
-                comment = formC.save(request.user,request.FILES['image'],identified_post)
-            else:
-                comment = formC.save(request.user,None,identified_post)
+        context = {
+            "post": post,
+            "formC": form,
+            "edit_rights" : edit_rights,
+            "tags": tags,
+            "total_comments":total_comments,
+            "comments": comments,
+        }
+        return render(request, "blog/post-detail.html", context)
+        
 
+    def post(self, request, pk, *args, **kwargs):
+        post = Post.objects.get(pk=pk)
+        form  = UpdatedCommentForm(request.POST)
+        comments = Comment.objects.filter(post=post).order_by('-date_added')
+        author = post.author
+        tags = post.tags.all()
+        total_comments = Comment.objects.filter(post_id=post).count
+        edit_rights = True if author == request.user else False
 
-            query = formC.instance
-            return redirect("post-detail-page",slug = slug)
-        else: 
-            messages.error(request,("There was an issue with the comment"))
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.commentor = request.user
+            new_comment.post = post
+            new_comment.save()
 
-    formC = CreateCommentForm()
-    edit_rights = True if author == request.user else False
-    return render(request,"blog/post-detail.html",{
-        "post": identified_post,
-        "tags" : identified_post.tags.all(),
-        "comments": comments,
-        "formC" : formC,
-        "edit_rights": edit_rights,
-        "total_comments":total_comments,
-    })
+        context = {
+            "post": post,
+            "formC": form,
+            "tags": tags,
+            "edit_rights" : edit_rights,
+            "total_comments":total_comments,
+            "comments": comments,
+        }
+        return render(request, "blog/post-detail.html", context)
+
+#def post_details_view(request, slug):
+#    identified_post = get_object_or_404(Post, slug=slug)
+#    #identified_post = next(post for post in crack_post if post["slug"]== slug)
+#    author = identified_post.author
+#    comments = Comment.objects.filter(post_id=identified_post)
+#    total_comments = Comment.objects.filter(post_id=identified_post).count
+#    if request.method == "POST":
+#        formC = CreateCommentForm(request.POST)
+#
+#        if formC.is_valid():
+#            print(request.FILES)
+#            if (request.FILES):
+#                comment = formC.save(request.user,request.FILES['image'],identified_post)
+#            else:
+#                comment = formC.save(request.user,None,identified_post)
+#
+#
+#           query = formC.instance
+#            return redirect("post-detail-page",slug = slug)
+#        else: 
+#            messages.error(request,("There was an issue with the comment"))
+
+#    formC = CreateCommentForm()
+#    edit_rights = True if author == request.user else False
+#    return render(request,"blog/post-detail.html",{
+#        "post": identified_post,
+#        "tags" : identified_post.tags.all(),
+#        "comments": comments,
+#        "formC" : formC,
+#        "edit_rights": edit_rights,
+#        "total_comments":total_comments,
+#    })
 @login_required(login_url="user-login")
 def edit_post_view(request,slug):
     post_information = get_object_or_404(Post,slug=slug)
@@ -147,38 +173,38 @@ def register_view(request):
 
     if request.method == "POST":
         formU = UserRegistrationForm(request.POST)
-        formP = ProfileRegistrationForm(request.POST)
+        #formP = ProfileRegistrationForm(request.POST)
 
         if formU.is_valid():
-            if formP.is_valid():
-                user = formU.save()
-                profile = formP.save(user)
-                return redirect("home-page")
+           # if formP.is_valid():
+            user = formU.save()
+               # profile = formP.save(user)
+            return redirect("home-page")
 
-            else:
-                messages.error(request,f"Error with profile creation page. Please ensure that profile information is correct")
+            #else:
+            #    messages.error(request,f"Error with profile creation page. Please ensure that profile information is correct")
         else:
             messages.error(request,f"Error with user information. Please ensure that the user information is correct.")
 
     formU = UserRegistrationForm()
-    formP = ProfileRegistrationForm()
+    #formP = ProfileRegistrationForm()
 
 
-    return render(request, "blog/register.html", {"formU":formU,"formP":formP})
-@login_required(login_url="user-login")
-def profile_view(request):
-    profile_information = get_object_or_404(Profile,user=request.user)
-    if request.method  == 'GET':
-        form = ProfileUpdateForm(initial={"About":profile_information.About,
-                                            "title":profile_information.title,
-                                            "position":profile_information.position,
-                                            "profile_picture": profile_information.profile_picture,
-                                            }) 
-        return render(request,"blog/update_profile.html",{'form':form})
-    else:
-        form = ProfileUpdateForm(request.POST,instance=profile_information) 
-        profile_update = form.save()
-        return redirect('home-page')
+    return render(request, "blog/register.html", {"formU":formU,}) #"formP":formP})
+
+#def profile_view(request):
+#    profile_information = get_object_or_404(Profile,user=request.user)
+#    if request.method  == 'GET':
+#        form = ProfileUpdateForm(initial={"About":profile_information.About,
+#                                            "title":profile_information.title,
+#                                            "position":profile_information.position,
+#                                            "profile_picture": profile_information.profile_picture,
+#                                            }) 
+#        return render(request,"blog/update_profile.html",{'form':form})
+#    else:
+#        form = ProfileUpdateForm(request.POST,instance=profile_information) 
+#        profile_update = form.save()
+#        return redirect('home-page')
 
 @login_required(login_url="user-login")
 def add_tag_view(request):
@@ -415,7 +441,7 @@ class CommentReplyView(LoginRequiredMixin,View):
         post = Post.objects.get(pk=post_pk)
         parent_comment = Comment.objects.get(pk=pk)
 
-        form = CreateCommentForm(request.POST)
+        form = UpdatedCommentForm(request.POST)
 
         if form.is_valid():
             new_comment = form.save(commit=False)
@@ -423,4 +449,26 @@ class CommentReplyView(LoginRequiredMixin,View):
             new_comment.post = post
             new_comment.parent = parent_comment
             new_comment.save()
-        return redirect('share-thoughts',pk=post_pk)
+        return redirect('post-detail-page',pk=post_pk)
+
+class PostEditView(UpdateView):
+    model = Post
+    fields = ['title','excerpt','image','content','tags']
+    template = 'blog/update_post.html'
+
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse_lazy('post-detail-page', kwargs={'pk':pk})
+
+class ProfileView(View):
+    def get(self, request, pk, *args, **kwargs):
+        profile = Profile.objects.get(pk=pk)
+        user = profile.user
+        posts = Post.objects.filter(author=user).order_by('-date')
+
+        context= {
+            "user": user,
+            "profile": profile,
+            "posts": posts
+        }
+        return render(request, "blog/profile.html", context)

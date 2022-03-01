@@ -23,3 +23,5 @@ urlpatterns = [
     path("", include("blog.urls")), 
     path('blog/',include("django.contrib.auth.urls")), # http://localhost:8000/ -> starting page!
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+
+

@@ -4,6 +4,7 @@ from django.core.validators import MinLengthValidator
 from django.db.models.deletion import CASCADE
 from django.urls import reverse
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 # Create your models here.
 
@@ -95,11 +96,19 @@ class Comment(models.Model):
             return True
         return False
 
-class Profile (models.Model):
-    user = models.OneToOneField(User, on_delete=CASCADE)
-    About = models.TextField(blank= True)
-    title = models.CharField(max_length=6,choices =titles,default="mr")
-    position = models.CharField(max_length=100)
-    profile_picture = models.ImageField(upload_to="posts/profile_pictures",blank= True)
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=CASCADE, verbose_name="user",related_name="profile")
+    name = models.CharField(max_length=30,blank=True,null=True)
+    bio =models.TextField(max_length=500, blank=True,null=True)
+    birth_date = models.DateField(null=True, blank=True)
+    location = models.CharField(max_length=100, blank=True, null=True)
+    profile_picture = models.ImageField(upload_to="uploads/profile_pictures",default='uploads/profile_pictures/default.png',blank= True)
 
-
+class Notification(models.Model):
+    notofication_type = models.IntegerField()
+    to_user = models.ForeignKey(User,related_name ="notification_to", on_delete=models.CASCADE,null=True)
+    from_user = models.ForeignKey(User,related_name ="notification_from", on_delete=models.CASCADE,null=True)
+    post = models.ForeignKey('Post',on_delete=models.CASCADE,related_name="+",null=True, blank=True)
+    comment = models.ForeignKey('Comment',on_delete=models.CASCADE,related_name="+",null=True, blank=True)
+    date = models.DateTimeField(default= timezone.now)
+    user_has_seen = models.BooleanField(default= False)

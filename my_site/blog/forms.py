@@ -81,25 +81,25 @@ class UserRegistrationForm(forms.Form):
             self.add_error(None,ValidationError("Password cannot be empty"))
 
 
-class ProfileRegistrationForm(ModelForm):
-    class Meta:
-        model = Profile
-        fields = ()
+#class ProfileRegistrationForm(ModelForm):
+#   class Meta:
+#        model = Profile
+#        fields = ()
 
-    def save(self,user_information,commit=True):
+#    def save(self,user_information,commit=True):
+#
+#        profile = super(ProfileRegistrationForm,self).save(commit=False)
+#
+#        profile.user = user_information
+#
+#        if commit:
+#            profile.save()
+#        return profile
 
-        profile = super(ProfileRegistrationForm,self).save(commit=False)
-
-        profile.user = user_information
-
-        if commit:
-            profile.save()
-        return profile
-
-class ProfileUpdateForm(ModelForm):
-    class Meta:
-        model = Profile
-        fields = ("About","title","position","profile_picture",)
+#class ProfileUpdateForm(ModelForm):
+#    class Meta:
+#        model = Profile
+#        fields = ("About","title","position","profile_picture",)
 
 class CreatePostForm(ModelForm):
     class Meta:
@@ -124,23 +124,21 @@ class CreateTagForm(ModelForm):
     class Meta:
         model = Tag
         fields = "__all__"
+        
+class UpdatedCommentForm(ModelForm):
+    body = forms.CharField(
+        label = '',
+        widget = forms.Textarea(
+            attrs={
+                'rows': 4,
+                'placeholder': "Say Something ..."
+            }
+        )
+    )
 
-class CreateCommentForm(ModelForm):
     class Meta:
         model = Comment
-        fields = ("body","image",)
-
-    def save(self,author,image_file,original_post,commit=True):
-
-        comment_c = super(CreateCommentForm,self).save(commit = False)
-
-        comment_c.commentor = author
-        comment_c.post = original_post
-        comment_c.image = image_file
-
-        if commit:
-            comment_c.save()
-        return comment_c
+        fields = ("body",)
 
 class CommentReplyForm(ModelForm):
     class Meta:
