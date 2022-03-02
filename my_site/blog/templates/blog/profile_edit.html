@@ -1,0 +1,18 @@
+{% extends "blog/base.html"%}
+{% load static %}
+
+{%block title%} {{post.title}} {% endblock %}
+
+{% block content %}
+<center><h2 style="margin: 10px;"> Update Profile </h2></center>
+
+<main>
+  <form method="POST" enctype="multipart/form-data"> 
+      {% csrf_token %}
+      {{form.as_p}}
+      <button type="submit" class="btn btn-info">Update</button>
+      <a href="{% url 'profile' object.pk %}" class="btn btn-secondary">Back to Profile</a>
+  </form> 
+</main>   
+  
+{% endblock %}

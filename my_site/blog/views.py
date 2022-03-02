@@ -9,7 +9,7 @@ from .forms import EditPostForm, UserRegistrationForm, CreatePostForm, CreateTag
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .email_functions import query_notification
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
 from django.views import View
 # Create your views here.
@@ -313,16 +313,28 @@ def delete_comment(request, pk):
          comment.delete()
      return redirect('share-thoughts')
 
-class DeletePostView(DeleteView):
+class DeletePostView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    
     model = Post
-    template_name ="blog/delete_post.html"
-    success_url = reverse_lazy("share-thoughts")
+    template_name ='blog/delete_post.html'
+    success_url = reverse_lazy('share-thoughts')
 
-@login_required(login_url="user-login")
-class EditPostView(UpdateView):
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user==post.author
+
+class EditPostView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    template_name = 'update_post.html'
+    template_name = 'blog/update_post.html'
     fields = ['title','excerpt','image','content','tags']
+
+    def get_success_url(self):
+        pk = self.kwargs['pk'] 
+        return reverse_lazy('post-detail-page', kwargs={'pk': pk})
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user==post.author
 
 class AddLikes(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
@@ -472,3 +484,16 @@ class ProfileView(View):
             "posts": posts
         }
         return render(request, "blog/profile.html", context)
+
+class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Profile
+    fields = ['name','bio','birth_date','location','profile_picture']
+    template = "blog/profile_edit.html"
+    
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse_lazy('profile', kwargs={'pk':pk})
+
+    def test_func(self):
+        profile = self.get_object()
+        return self.request.user == profile.user

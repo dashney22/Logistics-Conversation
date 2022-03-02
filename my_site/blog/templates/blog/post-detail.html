@@ -29,10 +29,10 @@
   </section>
     {% if user.is_authenticated %}
             <main>
-                {%if request.user.username == post.author.username %}
-                  <a href="{%url 'delete-post' post.slug%}" class="btn btn-danger"> Delete Post</a>
-                  <a href="{%url 'post-edit' post.pk%}" class="btn btn-info">Edit Post</a>
-                {% endif %}
+                
+                  <a href="{% url 'delete-post' post.pk %}" class="btn btn-danger"> Delete Post</a>
+                  <a href="{% url 'post-edit' post.pk %}" class="btn btn-info">Edit Post</a>
+                
           
             </main>
 
@@ -132,12 +132,6 @@
                       {% endif %}
 
                   {% endif %}
-                      
-                  
-
-          
-              
-
                  
                   {% if user.is_authenticated %}
                   <h2> Add a new comment</h2>
@@ -166,5 +160,5 @@
         </main>
             
       {% endif %} 
-  <script type="text/javascript" src="{% static 'blog/js/social.js' %}"></script>
+ 
 {% endblock %}
