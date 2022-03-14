@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
-from .models import Post, Tag, Profile, Comment
+from .models import Notification, Post, Tag, Profile, Comment
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -54,7 +54,7 @@ def posts_view(request):
     })
 
 
-class PostDetailView(View):
+class PostDetailView(LoginRequiredMixin, View):
 
     def get(self, request, pk, *args, **kwargs):
         post = Post.objects.get(pk=pk)
@@ -91,6 +91,8 @@ class PostDetailView(View):
             new_comment.post = post
             new_comment.save()
 
+        notification = Notification.objects.create(notification_type=2 ,from_user=request.user,to_user=post.author, post=post)
+
         context = {
             "post": post,
             "formC": form,
@@ -100,57 +102,6 @@ class PostDetailView(View):
             "comments": comments,
         }
         return render(request, "blog/post-detail.html", context)
-
-#def post_details_view(request, slug):
-#    identified_post = get_object_or_404(Post, slug=slug)
-#    #identified_post = next(post for post in crack_post if post["slug"]== slug)
-#    author = identified_post.author
-#    comments = Comment.objects.filter(post_id=identified_post)
-#    total_comments = Comment.objects.filter(post_id=identified_post).count
-#    if request.method == "POST":
-#        formC = CreateCommentForm(request.POST)
-#
-#        if formC.is_valid():
-#            print(request.FILES)
-#            if (request.FILES):
-#                comment = formC.save(request.user,request.FILES['image'],identified_post)
-#            else:
-#                comment = formC.save(request.user,None,identified_post)
-#
-#
-#           query = formC.instance
-#            return redirect("post-detail-page",slug = slug)
-#        else: 
-#            messages.error(request,("There was an issue with the comment"))
-
-#    formC = CreateCommentForm()
-#    edit_rights = True if author == request.user else False
-#    return render(request,"blog/post-detail.html",{
-#        "post": identified_post,
-#        "tags" : identified_post.tags.all(),
-#        "comments": comments,
-#        "formC" : formC,
-#        "edit_rights": edit_rights,
-#        "total_comments":total_comments,
-#    })
-@login_required(login_url="user-login")
-def edit_post_view(request,slug):
-    post_information = get_object_or_404(Post,slug=slug)
-    author = post_information.author
-    if (author == request.user):
-        if request.method == "GET":
-            form = EditPostForm(initial={"title":post_information.title,
-                                        "excerpt":post_information.excerpt,
-                                        "image":post_information.image,
-                                        "content":post_information.content,
-                                        "tags":post_information.tags.all()})
-            return render(request,"blog/update_post.html",{'form':form,'post':post_information})
-        else:
-            form = EditPostForm(request.POST,instance=post_information)
-            edited_post = form.save()
-            return redirect("share-thoughts")
-    
-
     
 def login_view(request):
     
@@ -192,19 +143,6 @@ def register_view(request):
 
     return render(request, "blog/register.html", {"formU":formU,}) #"formP":formP})
 
-#def profile_view(request):
-#    profile_information = get_object_or_404(Profile,user=request.user)
-#    if request.method  == 'GET':
-#        form = ProfileUpdateForm(initial={"About":profile_information.About,
-#                                            "title":profile_information.title,
-#                                            "position":profile_information.position,
-#                                            "profile_picture": profile_information.profile_picture,
-#                                            }) 
-#        return render(request,"blog/update_profile.html",{'form':form})
-#    else:
-#        form = ProfileUpdateForm(request.POST,instance=profile_information) 
-#        profile_update = form.save()
-#        return redirect('home-page')
 
 @login_required(login_url="user-login")
 def add_tag_view(request):
@@ -314,7 +252,6 @@ def delete_comment(request, pk):
      return redirect('share-thoughts')
 
 class DeletePostView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    
     model = Post
     template_name ='blog/delete_post.html'
     success_url = reverse_lazy('share-thoughts')
@@ -356,7 +293,7 @@ class AddLikes(LoginRequiredMixin, View):
                 break
         if not is_like:
             post.liked.add(request.user)
-        
+            notification = Notification.objects.create(notification_type=1,from_user=request.user,to_user=post.author,post=post)
         if is_like:
             post.liked.remove(request.user)
         
@@ -385,7 +322,7 @@ class AddDislikes(LoginRequiredMixin,View):
 
         if not disliked_post:
             post.disliked.add(request.user)
-
+            
         if disliked_post:
             post.disliked.remove(request.user)
 
@@ -412,7 +349,8 @@ class AddCommentLikes(LoginRequiredMixin, View):
                 break
         if not is_like:
             comment.liked.add(request.user)
-        
+            notification = Notification.objects.create(notification_type=1,from_user=request.user,to_user=comment.commentor,comment=comment)
+
         if is_like:
             comment.liked.remove(request.user)
         
@@ -461,9 +399,12 @@ class CommentReplyView(LoginRequiredMixin,View):
             new_comment.post = post
             new_comment.parent = parent_comment
             new_comment.save()
+
+        notification = Notification.objects.create(notification_type=2 ,from_user=request.user,to_user=parent_comment.commentor, comment=new_comment)
+
         return redirect('post-detail-page',pk=post_pk)
 
-class PostEditView(UpdateView):
+class PostEditView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
     model = Post
     fields = ['title','excerpt','image','content','tags']
     template = 'blog/update_post.html'
@@ -497,3 +438,14 @@ class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         profile = self.get_object()
         return self.request.user == profile.user
+
+
+class PostNotificationView(View):
+    def get(self, request, notification_pk,post_pk,*args, **kwargs):
+        notification = Notification.objects.get(pk=notification_pk)
+        post = Post.objects.get(pk=post_pk)
+
+        notification.user_has_seen = True
+        notification.save()
+
+        return redirect('post-detail-page',pk=post_pk)

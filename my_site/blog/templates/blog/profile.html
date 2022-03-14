@@ -24,19 +24,19 @@
             <h3 class="py-4">{{profile.name}}
                 <span>
                     {% if request.user == user %}
-                     <a href="{% url 'profile-edit' profile.pk %}" style="color: #333"><i class="far fa-edit"></i></a>
+                     <a href="{% url 'profile-edit' profile.pk %}" style="color: #333;"><i class="far fa-edit"></i></a>
                     {%endif%}
                 </span>
             </h3>
 
             {% if profile.location %}
-                <p>{{profile.location}}</p>
+                <p>Location: <strong>{{profile.location}}</strong></p>
             {%endif%}
             {% if profile.birth_date %}
-                <p>{{profile.birth_date}}</p>
+                <p>D.O.B : <strong>{{profile.birth_date}}</strong></p>
             {%endif%}
             {% if profile.bio %}
-                <p>{{profile.bio}}</p>
+                <p>BIO: <strong>{{profile.bio}}</strong></p>
             {%endif%}
         </div>
     </div>

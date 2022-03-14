@@ -1,0 +1,42 @@
+{% load static %}
+{% block css_file%}
+    <link rel="stylesheet" href="{% static 'blog/notification.css'%}">  
+{% endblock %}
+
+<div class="dropdown">
+    <span class="badge bg-primary notification-bagde" onclick="showNotifications()">{{notifications.count}}</span>
+    <div class="dropdown-content d-none" id="notification-container">
+        {% for notification in notifications %}
+            {% if notification.post%}
+                {% if notification.notification_type == 1 %}
+                    <div class="dropdown-item-parent">
+                        <a href="{% url 'post-notification' notification.pk notification.post.pk %}"><strong>{{notification.from_user}}</strong> liked your post</a>
+                        <span class="dropdown-item-close">&times. </span>
+                    </div>
+                {% else %}
+                    <div class="dropdown-item-parent">
+                        <a href="{% url 'post-notification' notification.pk notification.post.pk %}"><strong>{{notification.from_user}}</strong> commented on your post</a>
+                        <span class="dropdown-item-close">&times. </span>
+                    </div>
+                {% endif %}
+
+            {% elif notification.comment%}
+
+                {% if notification.notification_type == 1%}
+                    <div class="dropdown-item-parent">
+                        <a href="{% url 'post-notification' notification.pk notification.comment.post.pk %}"><strong>{{notification.from_user}}</strong> liked your comment</a>
+                        <span class="dropdown-item-close">&times. </span>
+                    </div>
+                {% else %}
+                    <div class="dropdown-item-parent">
+                        <a href="{% url 'post-notification' notification.pk notification.comment.post.pk %}"><strong>{{notification.from_user}}</strong> replied your comment</a>
+                        <span class="dropdown-item-close">&times. </span>
+                    </div>
+                {% endif %}
+            {% else %}
+
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+<script type="text/javascript" src="{% static 'blog/js/social.js' %}"></script>

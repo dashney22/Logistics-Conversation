@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import DeletePostView, AddDislikes,AddLikes, AddCommentDislikes, AddCommentLikes, CommentReplyView, PostDetailView, EditPostView, ProfileView,ProfileEditView
+from .views import DeletePostView, AddDislikes,AddLikes, AddCommentDislikes, AddCommentLikes, CommentReplyView, PostDetailView, EditPostView, ProfileView,ProfileEditView,PostNotificationView
 
 urlpatterns = [
     path("", views.starting_page_view, name="home-page"),
@@ -28,4 +28,5 @@ urlpatterns = [
     path("post/<int:post_pk>/comment/<int:pk>/reply",CommentReplyView.as_view(),name="comment-reply"),
     path("profile/<int:pk>", ProfileView.as_view(), name="profile"),
     path("profile/edit/<int:pk>", ProfileEditView.as_view(), name="profile-edit"),
+    path("notification/<int:notification_pk>/post<int:post_pk>",PostNotificationView.as_view(),name="post-notification"),
 ]

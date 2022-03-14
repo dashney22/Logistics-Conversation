@@ -86,7 +86,7 @@ class Comment(models.Model):
         return self.likes.count()
         
     def __str__(self):
-        return '%s - %s' %(self.post.title, self.name)
+        return '%s' %(self.post.title)
 
     @property
     def children(self):
@@ -107,7 +107,7 @@ class Profile(models.Model):
     profile_picture = models.ImageField(upload_to="uploads/profile_pictures",default='uploads/profile_pictures/default.png',blank= True)
 
 class Notification(models.Model):
-    notofication_type = models.IntegerField()
+    notification_type = models.IntegerField()
     to_user = models.ForeignKey(User,related_name ="notification_to", on_delete=models.CASCADE,null=True)
     from_user = models.ForeignKey(User,related_name ="notification_from", on_delete=models.CASCADE,null=True)
     post = models.ForeignKey('Post',on_delete=models.CASCADE,related_name="+",null=True, blank=True)
