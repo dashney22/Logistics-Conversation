@@ -90,7 +90,7 @@ class Comment(models.Model):
 
     @property
     def children(self):
-        return Comment.objects.filter(parent=self).order_by('-date_added').all()
+        return Comment.objects.filter(parent=self).order_by('date_added').all()
 
     @property
     def is_parent(self):

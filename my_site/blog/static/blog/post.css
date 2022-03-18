@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+    min-width: 300px;
   }
   
   .post a {
@@ -10,6 +11,7 @@
     color: black;
     transition: all 0.2s ease;
     padding: 1rem;
+    min-width: 300px;
   }
   
   .post a:hover,

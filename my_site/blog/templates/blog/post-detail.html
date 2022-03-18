@@ -12,7 +12,7 @@
   <section id="summary">
 
       {% if user.is_authenticated %}
-        <a href="{%url 'add-tag'%}" class="btn btn-info">Create discussion tag</a>
+        <a href="{%url 'add-tag-post' post_pk=post.pk%}" class="btn btn-info">Create discussion tag</a>
       {% endif %}
         <h2>{{post.title}}</h2>
         <div>
@@ -28,13 +28,12 @@
         
   </section>
     {% if user.is_authenticated %}
-            <main>
-                
+          {% if edit_rights %}
+            <main>   
                   <a href="{% url 'delete-post' post.pk %}" class="btn btn-danger"> Delete Post</a>
                   <a href="{% url 'post-edit' post.pk %}" class="btn btn-info">Edit Post</a>
-                
-          
             </main>
+          {% endif %}
 
             <main>
                   {{post.content}}
@@ -87,7 +86,7 @@
                                     </button>
                                   </form>
                                   {%if request.user.username == comment.commentor.username %}
-                                          <a href="{% url 'delete-comment' post.pk %}"><i class=" fa fa-trash"></i></a>
+                                          <a href="{% url 'delete-comment' post.pk comment.pk%}"><i class=" fa fa-trash"></i></a>
                                   {% endif %} &nbsp
                                   <div>
                                     <button class="remove-default-btn"> <i class="far fa-comment-dots" onclick="commentReplyToggle('{{comment.pk}}')"></i> </button>
@@ -110,7 +109,7 @@
                                 </div>
                                 <hr>
                                   {%for child_comment in comment.children%}
-                                    <div class="row justify-content-center mt-3 mb-5 d-none child-comment">
+                                    <div class="row justify-content-center mt-3 mb-5 child-comment">
                                       <div class="col-md-5 col-sm-12 border-bottom">
                                           <p>
                                             <strong>
@@ -119,10 +118,48 @@
                                             </strong>
                                           </p>
                                           <p>{{child_comment.body}}</p>
-                                          {%if request.user == child_comment.commentor %}
-                                            <a href="{% url 'delete-comment' post.pk comment.pk %}"><i class=" fa fa-trash"></i>
+                                          <!-- {%if request.user == child_comment.commentor %}
+                                            <a href="{% url 'delete-comment' post.pk child_comment.pk %}"><i class=" fa fa-trash"></i>
                                             </a>
-                                          {% endif %}
+                                          {% endif %} -->
+                                          <div class="d-flex flex-row">
+                                            <form method="POST" action="{% url 'comment-likes' child_comment.pk %}">
+                                              {%csrf_token%}
+                                              <input type="hidden" name="next" value="{{request.path}}">
+                                              <button style="background-color: transparent;border:none;box-shadow: none;" type="submit">
+                                                <i class="far fa-thumbs-up"><span>{{child_comment.liked.all.count}}</span></i>
+                                              </button>
+                                            </form>
+                        
+                                            <form method="POST" action="{% url 'comment-dislikes' child_comment.pk %}">
+                                              {%csrf_token%}
+                                              <input type="hidden" name="next" value="{{request.path}}">
+                                              <button style="background-color: transparent;border:none;box-shadow: none;" type="submit">
+                                                <i class="far fa-thumbs-down"><span>{{child_comment.disliked.all.count}}</span></i>
+                                              </button>
+                                            </form>
+                                            {%if request.user == child_comment.commentor %}
+                                                    <a href="{% url 'delete-comment' post.pk child_comment.pk%}"><i class=" fa fa-trash"></i></a>
+                                            {% endif %} &nbsp
+                                           <!--  <div>
+                                              <button class="remove-default-btn"> <i class="far fa-comment-dots" onclick="commentReplyToggle('{{child_comment.pk}}')"></i> </button>
+                                            </div>
+                                          -->
+                                          </div>                                          
+                                          <br>
+          
+                                          <!-- 
+                                          <div class="row justify-content-center mt-3 mb-5 d-none" id="{{child_comment.pk}}">
+                                            <div class="col-md-5 col-sm-12">
+                                              <form method="POST" action = "{% url 'comment-reply' post.pk child_comment.pk %}">
+                                                {% csrf_token %}
+                                                {{formC.as_p}}
+                                                <div class="d-grid gap-2">
+                                                  <button class="btn btn-success btn-block mt-3">Submit</button>
+                                                </div>
+                                              </form>
+                                            </div>
+                                          </div> -->
                                       </div>
                                     </div>
                                   {%endfor%}
@@ -152,12 +189,15 @@
             </main>
       {%else%}
       
-        <main>
+      <main>
+        {{post.content}}
+        <br>
+        <hr>
           <div class="alert alert-danger" role="alert">
-            To leave a comment on the discussion, please first <strong>register or login</strong> with an existing account.!
+            To leave a comment on the discussion or view the full discussion, please first <strong><a href="/login">register or login</a></strong> with an existing account!
           </div>
           <p></p>
-        </main>
+      </main>
             
       {% endif %} 
  

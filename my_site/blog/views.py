@@ -54,12 +54,12 @@ def posts_view(request):
     })
 
 
-class PostDetailView(LoginRequiredMixin, View):
-
+class PostDetailView(View):
+    # login_url ='/login'
     def get(self, request, pk, *args, **kwargs):
         post = Post.objects.get(pk=pk)
         form  = UpdatedCommentForm()
-        comments = Comment.objects.filter(post=post).order_by('-date_added')
+        comments = Comment.objects.filter(post=post).order_by('date_added')
         author = post.author
         tags = post.tags.all()
         total_comments = Comment.objects.filter(post_id=post).count
@@ -79,7 +79,8 @@ class PostDetailView(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         post = Post.objects.get(pk=pk)
         form  = UpdatedCommentForm(request.POST)
-        comments = Comment.objects.filter(post=post).order_by('-date_added')
+        comments = Comment.objects.filter(post=post).order_by('date_added')
+
         author = post.author
         tags = post.tags.all()
         total_comments = Comment.objects.filter(post_id=post).count
@@ -108,8 +109,7 @@ def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-        print(username)
-        print(password)
+
         user = authenticate(request, username =username,password=password)
         if user is not None:
             login(request, user)
@@ -153,13 +153,40 @@ def add_tag_view(request):
 
         if formT.is_valid():
             tag = formT.save()
-
             return redirect("home-page")
 
         else:
             messages.error(request,f"Error with tag creation. Please ensure all tag information is provided")
 
     formT = CreateTagForm()
+
+    return render(request, "blog/add_tag.html", {"formT":formT})
+
+@login_required(login_url="user-login")
+def add_tag_from_post_view(request,post_pk):
+
+    if request.method == "POST":
+        formT = CreateTagForm(request.POST)
+        
+
+        if formT.is_valid():
+            tag = formT.save()
+            post_information = get_object_or_404(Post,id=post_pk)
+            post_information.tags.add(tag) 
+            # post_information.save()
+            return HttpResponseRedirect(reverse('post-detail-page', args=(post_pk,)))
+            # return render(request,"blog/post-detail.html",{
+            #     "post": post_information,
+            #     "tags" : post_information.tags.all(),
+            #     "comments": comments,
+            #     "formC" : formC,
+            #     "edit_rights": edit_rights,
+            # })
+
+        else:
+            messages.error(request,f"Error with tag creation. Please ensure all tag information is provided")
+
+    formT = CreateTagForm(initial={"caption":"", "description":""})
 
     return render(request, "blog/add_tag.html", {"formT":formT})
 
@@ -214,7 +241,6 @@ def what_if_view(request):
 
 def get_queryset(request):
         query = request.GET.get('search_bar')
-        print(request.GET)
         object_list = Post.objects.filter(
             Q(title__icontains=query) | Q(excerpt__icontains=query) |Q(content__icontains=query) | Q(author__icontains=query) |Q(tags__icontains=query)
         )
@@ -232,7 +258,7 @@ def posts_search_view(request):
             lookups= Q(title__icontains=query) | Q(excerpt__icontains=query) |Q(content__icontains=query) | Q(author__first_name__icontains=query)| Q(author__last_name__icontains=query) | Q(author__username__icontains=query) |Q(tags__caption__icontains=query)
 
             results= Post.objects.filter(lookups).distinct()
-            print(results)
+
             context={'posts': results,
                      'submitbutton': submitbutton}
 
@@ -245,11 +271,11 @@ def posts_search_view(request):
         return render(request, 'search/search-posts.html')
 
 
-def delete_comment(request, pk):
-     comment = Comment.objects.filter(post=pk).last()
+def delete_comment(request, post_pk, comment_pk):
+     comment = Comment.objects.filter(id=comment_pk).last()
      if comment:
          comment.delete()
-     return redirect('share-thoughts')
+     return redirect('post-detail-page',pk=post_pk)
 
 class DeletePostView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post

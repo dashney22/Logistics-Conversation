@@ -11,21 +11,40 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 from pathlib import Path
 import os
+import dotenv
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PARENT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '%4j!st)u^d_(xj-=#b5oqg(ile=(ji_mkexdmgnd#^u8y2^^b*'
+
+dotenv_file = os.path.join(BASE_DIR, ".env")
+#Loads the variables if the file existist
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
+
+
+
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+LOCAL = os.environ.get("LOCAL")
+if type(LOCAL) != 'bool':
+    if LOCAL == 'True':
+        LOCAL = True
+        DEBUG = True
+    else:
+        LOCAL = False
+        DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.environ.get("SERVER_IP"),
+                 '127.0.0.1']
 
 
 # Application definition
@@ -78,33 +97,26 @@ WSGI_APPLICATION = 'my_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-#DATABASES ={
-#    'default':{
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME' : os.path.join(BASE_DIR, 'db.sqlite3'),
-#    }
-#}
-
 DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-          # 'NAME': 'pbsportaldatabase',
-            'NAME': 'logistics_conversation_database',
-            'USER': 'django',
-            'PASSWORD': 'p1234567',
-            'HOST': '127.0.0.1',
-            'PORT': '',
-       }   
-}
+            'NAME': os.environ.get("DATABASE_NAME"),
+            'USER': os.environ.get("DATABASE_USER"),
+            'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
+            'HOST': os.environ.get("DATABASE_IP"),
+            'PORT': os.environ.get("DATABASE_PORT"),
+        }
+    }
 
     #Gmail Details
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'logisticsconversation@gmail.com'
-EMAIL_HOST_PASSWORD = 'Logistics_Conversation_~!@#$'
-EMAIL_PBS_RECEIVER = EMAIL_HOST_USER
+EMAIL_PORT = os.environ.get("EMAIL_HOST_PORT")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_PBS_SENDER = os.environ.get('EMAIL_PBS_SENDER')
+EMAIL_PBS_RECEIVER = os.environ.get('EMAIL_PBS_RECEIVER')
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
+
 
 
 # Password validation
@@ -165,3 +177,7 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+
+SESSION_COOKIE_AGE = 15*60
+SESSION_SAVE_EVERY_REQUEST= True
