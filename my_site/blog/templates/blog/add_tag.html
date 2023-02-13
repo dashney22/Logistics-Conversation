@@ -3,18 +3,65 @@
 
 
 {%block css_file%} 
- <link rel="stylesheet", href="{% static "blog/post-detail.css"%}">
+ <link rel="stylesheet", href="{% static "blog/css/post-detail.css"%}">
+ <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 {%endblock%}
+
+
 
 
 {% block content %}
 <center><h2 style="margin: 10px;"> Add a Discussion Tag</h2></center>
 <main>
-    <form method="POST" enctype="multipart/form-data"> 
+	<script>
+		var existing_tags = {{existing_tags|safe}};
+		$( function() {
+		  var availableTags = existing_tags;
+		  $( "#tags" ).autocomplete({
+			source: availableTags
+		  });
+		} );
+		</script>
+	  </head>
+	  <body>
+	<form method="POST" enctype="multipart/form-data"> 
+		{% csrf_token %}
+		<div class="ui-widget">
+		<label for="tags">Tag name: </label>
+		<input id="tags" name="{{formT.caption.name}}" type="text" placeholder="Enter new tag name">	
+		<br>
+		<label for="tags">Tags description </label>
+		<input id="tag_description" name="{{formT.description.name}}" type="text" placeholder="Enter new tag description">	
+		</div>
+		<br>
+		<button type="submit" class="btn btn-light">Add tag</button>
+	  </body>
+	</form> 
+
+    <!-- <form method="POST" enctype="multipart/form-data"> 
+		{{ formT.source }}
         {% csrf_token %}
-        {{formT.as_p}}
+        <!-- {{formT.as_p}} 
+		<label>
+			New Tag Caption:
+		</label>
+		{{formT.caption}}
+		<br>
+		<label>
+			New Tag Description:
+		</label>
+		{{formT.description}}
+		<br>
         <button type="submit" class="btn btn-light">Add tag</button>
     </form> 
+
+	<script>
+		$(function() {
+
+		}
+	</script> -->
+
+
 </main>
    
 

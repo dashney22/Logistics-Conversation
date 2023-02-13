@@ -27,7 +27,7 @@ PARENT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__f
 dotenv_file = os.path.join(BASE_DIR, ".env")
 #Loads the variables if the file existist
 if os.path.isfile(dotenv_file):
-    dotenv.load_dotenv(dotenv_file)
+	dotenv.load_dotenv(dotenv_file)
 
 
 
@@ -36,59 +36,59 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 LOCAL = os.environ.get("LOCAL")
 if type(LOCAL) != 'bool':
-    if LOCAL == 'True':
-        LOCAL = True
-        DEBUG = True
-    else:
-        LOCAL = False
-        DEBUG = False
+	if LOCAL == 'True':
+		LOCAL = True
+		DEBUG = True
+	else:
+		LOCAL = False
+		DEBUG = False
 
 ALLOWED_HOSTS = [os.environ.get("SERVER_IP"),
-                 '127.0.0.1']
+				 '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'blog.apps.BlogConfig',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    
+	'blog.apps.BlogConfig',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	
 ]
 
 
 AUTH_USER_MODEL = "blog.User"
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'django.middleware.security.SecurityMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'my_site.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+	{
+		'BACKEND': 'django.template.backends.django.DjangoTemplates',
+		'DIRS': [],
+		'APP_DIRS': True,
+		'OPTIONS': {
+			'context_processors': [
+				'django.template.context_processors.debug',
+				'django.template.context_processors.request',
+				'django.contrib.auth.context_processors.auth',
+				'django.contrib.messages.context_processors.messages',
+			],
+		},
+	},
 ]
 
 WSGI_APPLICATION = 'my_site.wsgi.application'
@@ -98,24 +98,26 @@ WSGI_APPLICATION = 'my_site.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ.get("DATABASE_NAME"),
-            'USER': os.environ.get("DATABASE_USER"),
-            'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
-            'HOST': os.environ.get("DATABASE_IP"),
-            'PORT': os.environ.get("DATABASE_PORT"),
-        }
-    }
+		'default': {
+			'ENGINE': 'django.db.backends.postgresql_psycopg2',
+			'NAME': os.environ.get("DATABASE_NAME"),
+			'USER': os.environ.get("DATABASE_USER"),
+			'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
+			'HOST': os.environ.get("DATABASE_IP"),
+			'PORT': os.environ.get("DATABASE_PORT"),
+		}
+	}
 
-    #Gmail Details
+	#Gmail Details
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_PORT = os.environ.get("EMAIL_HOST_PORT")
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_PBS_SENDER = os.environ.get('EMAIL_PBS_SENDER')
 EMAIL_PBS_RECEIVER = os.environ.get('EMAIL_PBS_RECEIVER')
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-
+EMAIL_HOST_PASSWORD = os.environ.get("GMAIL_PASSCODE")
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
 
 
@@ -123,18 +125,18 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+	{
+		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+	},
 ]
 
 
@@ -155,7 +157,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/staticfiles/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 CRISPY_TEMPLATE_PACK = 'uni_form'
 
@@ -171,11 +173,11 @@ MEDIA_URL = '/media/'
 from django.contrib.messages import constants as messages
 
 MESSAGE_TAGS = {
-    messages.DEBUG: 'alert-info',
-    messages.INFO: 'alert-info',
-    messages.SUCCESS: 'alert-success',
-    messages.WARNING: 'alert-warning',
-    messages.ERROR: 'alert-danger',
+	messages.DEBUG: 'alert-info',
+	messages.INFO: 'alert-info',
+	messages.SUCCESS: 'alert-success',
+	messages.WARNING: 'alert-warning',
+	messages.ERROR: 'alert-danger',
 }
 
 

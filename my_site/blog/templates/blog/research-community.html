@@ -1,7 +1,330 @@
 {% extends 'blog/base.html'%}
 {% load static %}
-
+{% get_media_prefix %}
 {% block content%}
-    <h2 style="text-align: center; margin-top: 50px; color: #012c50; font-family: Times, serif;"><strong>WHO DOES WHAT?</strong> </h2> <hr>
-    <h5 style="text-align: center;">Click on the following link to be directed to the Logistics Conversation Research Community. <a href='https://kumu.io/gardenjane/permaculture-in-Ontario#projects/east AND https://kumu.io/Ewulu/sacn-stakeholder-mapping#sacn-stakeholder-mapping AND https://www.wits.ac.za/sacp/news-and-opinion/news-items/urban-data-and-analytics-emerging-opportunities-in-johannesburg-and-south-africa.html'>Click Me</a></h5>
+
+<!-- <div id="anychart-embed-samples-bct-network-graph-01" class="anychart-embed anychart-embed-samples-bct-network-graph-01">
+	<script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js?hcode=a0c21fc77e1449cc86299c5faa067dc4"></script>
+	<script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-graph.min.js?hcode=a0c21fc77e1449cc86299c5faa067dc4"></script>
+	<script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-exports.min.js?hcode=a0c21fc77e1449cc86299c5faa067dc4"></script>
+	<script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-ui.min.js?hcode=a0c21fc77e1449cc86299c5faa067dc4"></script>
+	<div id="ac_style_samples-bct-network-graph-01" style="display:none;">
+	html, body, #container {
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		padding: 0;
+	}
+	</div>
+	
+	<script>(function(){
+	function ac_add_to_head(el){
+		var head = document.getElementsByTagName('head')[0];
+		head.insertBefore(el,head.firstChild);
+	}
+	function ac_add_link(url){
+		var el = document.createElement('link');
+		el.rel='stylesheet';el.type='text/css';el.media='all';el.href=url;
+		ac_add_to_head(el);
+	}
+	function ac_add_style(css){
+		var ac_style = document.createElement('style');
+		if (ac_style.styleSheet) ac_style.styleSheet.cssText = css;
+		else ac_style.appendChild(document.createTextNode(css));
+		ac_add_to_head(ac_style);
+	}
+	ac_add_link('https://cdn.anychart.com/releases/8.11.0/css/anychart-ui.min.css?hcode=a0c21fc77e1449cc86299c5faa067dc4');
+	ac_add_style(document.getElementById("ac_style_samples-bct-network-graph-01").innerHTML);
+	ac_add_style(".anychart-embed-samples-bct-network-graph-01{width:600px;height:450px;}");
+	})();</script>
+	<div id="container"></div>
+
+	<script>
+		var profiles_data = {{profiles|safe}};
+		var tags = {{tags|safe}};
+		var connections = {{connections|safe}};
+		var nodes = [];
+		var edges = connections;
+		for (let i = 0; i<profiles_data.id.length;i++){
+			if(profiles_data.profile_picture[i] === ''){
+				
+				nodes.push({
+					id:profiles_data.id[i],
+					group:"profiles",
+					name:profiles_data.full_name[i],
+					// fill: {
+					// 	src: "{%  static '/media/uploads/profile_pictures/default.png'}"
+					// },
+					})
+			} else {
+				nodes.push({
+					id:profiles_data.id[i],
+					name:profiles_data.full_name[i],
+					// fill: {
+					// 	src: "../"+profiles_data.profile_picture[i]
+					// },
+					})
+				
+			}
+			
+		}
+		for (let i = 0; i<tags.id.length;i++){
+			nodes.push({
+					id:tags.id[i],
+					name:tags.name[i],
+					description:tags.description[i]
+					})
+		}
+		anychart.onDocumentReady(function () {
+		
+		// create data
+		var data = {
+		  nodes: nodes,
+		  edges: edges
+		};
+		// create a chart and set the data
+		var chart = anychart.graph(data);
+	
+		// set the chart title
+		chart.title("Network Graph: Basic Sample");
+		chart.layout().iterationCount(20);
+		// set the container id
+		chart.container("container");
+	
+		// initiate drawing the chart
+		chart.draw();
+	});
+	</script>
+</div> -->
+
+<!-- var DIR = "img/soft-scraps-icons/";
+
+var nodes = null;
+var edges = null;
+var network = null;
+
+// Called when the Visualization API is loaded.
+function draw() {
+  // create people.
+  // value corresponds with the age of the person
+  var DIR = "../img/indonesia/";
+  nodes = [
+    { id: 1, shape: "circularImage", image: DIR + "1.png" },
+    { id: 2, shape: "circularImage", image: DIR + "2.png" },
+    { id: 3, shape: "circularImage", image: DIR + "3.png" },
+    {
+      id: 4,
+      shape: "circularImage",
+      image: DIR + "4.png",
+      label: "pictures by this guy!",
+    },
+    { id: 5, shape: "circularImage", image: DIR + "5.png" },
+    { id: 6, shape: "circularImage", image: DIR + "6.png" },
+    { id: 7, shape: "circularImage", image: DIR + "7.png" },
+    { id: 8, shape: "circularImage", image: DIR + "8.png" },
+    { id: 9, shape: "circularImage", image: DIR + "9.png" },
+    { id: 10, shape: "circularImage", image: DIR + "10.png" },
+    { id: 11, shape: "circularImage", image: DIR + "11.png" },
+    { id: 12, shape: "circularImage", image: DIR + "12.png" },
+    { id: 13, shape: "circularImage", image: DIR + "13.png" },
+    { id: 14, shape: "circularImage", image: DIR + "14.png" },
+    {
+      id: 15,
+      shape: "circularImage",
+      image: DIR + "missing.png",
+      brokenImage: DIR + "missingBrokenImage.png",
+      label: "when images\nfail\nto load",
+    },
+    {
+      id: 16,
+      shape: "circularImage",
+      image: DIR + "anotherMissing.png",
+      brokenImage: DIR + "9.png",
+      label: "fallback image in action",
+    },
+  ];
+
+  // create connections between people
+  // value corresponds with the amount of contact between two people
+  edges = [
+    { from: 1, to: 2 },
+    { from: 2, to: 3 },
+    { from: 2, to: 4 },
+    { from: 4, to: 5 },
+    { from: 4, to: 10 },
+    { from: 4, to: 6 },
+    { from: 6, to: 7 },
+    { from: 7, to: 8 },
+    { from: 8, to: 9 },
+    { from: 8, to: 10 },
+    { from: 10, to: 11 },
+    { from: 11, to: 12 },
+    { from: 12, to: 13 },
+    { from: 13, to: 14 },
+    { from: 9, to: 16 },
+  ];
+
+  // create a network
+  var container = document.getElementById("mynetwork");
+  var data = {
+    nodes: nodes,
+    edges: edges,
+  };
+  var options = {
+    nodes: {
+      borderWidth: 4,
+      size: 30,
+      color: {
+        border: "#222222",
+        background: "#666666",
+      },
+      font: { color: "#eeeeee" },
+    },
+    edges: {
+      color: "lightgray",
+    },
+  };
+  network = new vis.Network(container, data, options);
+}
+
+window.addEventListener("load", () => {
+  draw();
+}); -->
+
+  <head>
+    <title>Network</title>
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"
+    ></script>
+    <style type="text/css">
+      #mynetwork {
+        width: 100%;
+        height: 100%;
+        border: 1px solid lightgray;
+		margin: auto;
+      }
+    </style>
+  </head>
+  <body>
+	<div style="height: 100em;">
+	<h1 style="text-align: center;"><strong>
+		Research network
+	</strong>
+	</h1>
+	<p><center>This is the Logistics Concersation network diagram. Here, all registered members of the portal are displayed aloong with the research topics that they have indicated that they are working on. <br>
+	Click on a registered member to see more inforation regarding that person or hover over a research topic to see more information regarding that research tag. <br>
+	Please remember to select the research fields that you are working on under your profile to better populate the network graph.
+	
+	</center></p>
+	<!-- <button id="changeNetworkButton">Change network to Institutes and Tags</button> -->
+    <div id="mynetwork"></div>
+    <script type="text/javascript">
+
+		// const networkChangeBtn = document.getElementById("changeNetworkButton");
+		// networkChangeBtn.addEventListener("click",changeNetwork);
+		var networkState = 1;
+		var profiles_data = {{profiles_tags|safe}};
+		// var institutes_tags = {{institute_tags|safe}};
+		var profiles_tags_connections = {{profile_tags_connections|safe}};
+		// var instituteConnections = {{institute_tag_connections|safe}};
+
+		var DIR = "../media/";
+		var nodesT = [];
+		// var edgesT = connections;
+		// for (let i = 0; i<profiles_data.id.length;i++){
+		// 	if(profiles_data.profile_picture[i] === ''){
+				
+		// 		nodesT.push({
+		// 			id:profiles_data.id[i],
+		// 			group:"profiles",
+		// 			label:profiles_data.full_name[i],
+		// 			image: DIR+'uploads/profile_pictures/default.png',
+		// 			url:`../profile/${profiles_data.id[i].slice(1,profiles_data.id[i].length)}`,
+		// 			shape:'circularImage',
+		// 			// fill: {
+		// 			// 	src: "{%  static '/media/uploads/profile_pictures/default.png'}"
+		// 			// },
+		// 			})
+		// 	} else {
+		// 		nodesT.push({
+		// 			id:profiles_data.id[i],
+		// 			group:"profiles",
+		// 			label:profiles_data.full_name[i],
+		// 			image: DIR+profiles_data.profile_picture[i],
+		// 			url:`../profile/${profiles_data.id[i].slice(1,profiles_data.id[i].length)}`,
+		// 			shape:'circularImage',
+		// 			// fill: {
+		// 			// 	src: "../"+profiles_data.profile_picture[i]
+		// 			// },
+		// 			})
+				
+		// 	}
+			
+		// }
+		// for (let i = 0; i<tags.id.length;i++){
+		// 	nodesT.push({
+		// 			id:tags.id[i],
+		// 			label:tags.name[i],
+		// 			description:tags.description[i]
+		// 			})
+		// }
+		var edges = profiles_tags_connections;
+      // create an array with nodes
+		// var nodes = profiles_data;
+		var nodes = new vis.DataSet(profiles_data);
+
+		// create an array with edges
+		// var edges = new vis.DataSet([
+		// 	{ from: 1, to: 3 },
+		// 	{ from: 1, to: 2 },
+		// 	{ from: 2, to: 4 },
+		// 	{ from: 2, to: 5 },
+		// 	{ from: 3, to: 3 },
+		// ]);
+
+		// create a network
+		var container = document.getElementById("mynetwork");
+		var data = {
+			nodes: nodes,
+			edges: edges,
+		};
+		var options = {
+			interaction: {
+			navigationButtons: true,
+			keyboard: true,
+			},
+		};
+		var network = new vis.Network(container, data, options);
+
+
+
+		network.on("click",function(params){
+			if(params.nodes.length){
+				var node = nodes.get(params.nodes[0]);
+				window.open(node.url,"_blank");
+			}
+		})
+
+		// function changeNetwork(){
+		// 	if(networkState == 1){
+		// 		// change the network to the institute tag network and redraw
+		// 		networkState = 2;
+		// 		network.setData
+		// 			({nodes:institutes,
+		// 			edges:instituteConnections,})
+		// 		network.redraw();
+
+		// 	} else if(networkState == 2){
+		// 		// change the network back to the researcher tag network and redraw
+		// 		networkState = 1;
+		// 		network.setData
+		// 			(data);
+		// 		network.redraw();
+		// 	}
+		// }
+		</script>
+		</div>
+  </body>
+</html>
 {% endblock%}

@@ -4,7 +4,7 @@
 {%block title%} Profile {% endblock %}
 
 {%block css_file%} 
- <link rel="stylesheet" href="{% static "blog/all-posts.css" %}">
+ <link rel="stylesheet" href='{% static "blog/css/profile.css" %}'>
 
 {%endblock%}
 
@@ -19,7 +19,7 @@
     
     <div class="row justify-content-center mt-5">
         <div class="card shadow-sm col-md-8 col-sm-12 border-bottom px-5 pt-3">
-            <img src="{{profile.picture.url}}" class="rounded-circle" width="100" height="100"/>
+            <img src="{{profile.profile_picture.url}}" class="rounded-circle" width="100" height="100"/>
          
             <h3 class="py-4">{{profile.name}}
                 <span>
@@ -38,6 +38,24 @@
             {% if profile.bio %}
                 <p>BIO: <strong>{{profile.bio}}</strong></p>
             {%endif%}
+			{% if profile.display_email_opt %}
+
+				{% if profile.user.email %}
+					<p>Email address: <strong>{{profile.user.email}}</strong></p>
+				{% endif %}
+			{% endif %}
+			{% if profile.institute %}
+				<p>Institute: <strong>{{profile.institute}}</strong></p>
+			{% endif %}
+
+			{% if profile.tags %}
+				<p>Research tags: 
+					{% for tag in researcher_tags %}
+						<button disabled class="tagsbutton">{{tag}}</button>
+					{% endfor %}	
+				</p>
+				
+			{%endif%}
         </div>
     </div>
     {% for post in posts %}

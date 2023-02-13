@@ -4,8 +4,8 @@
 {%block title%} All My Posts {% endblock %}
 
 {%block css_file%} 
- <link rel="stylesheet" href="{% static "blog/all-posts.css" %}">
- <link rel="stylesheet" href="{% static "blog/post.css" %}">
+ <link rel="stylesheet" href="{% static "blog/css/all-posts.css" %}">
+ <link rel="stylesheet" href="{% static "blog/css/post.css" %}">
 {%endblock%}
 
 
@@ -25,15 +25,16 @@
         
         <div class="col-md-6 text-right">
             <div class="btn-group ">
+				{% if user.is_authenticated %}
                 <button type="button" class="btn btn-success btn-lg pull-right dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Create New Post
                 </button>
                 <div class="dropdown-menu">
-                  {% if user.is_authenticated %}
+                  
                   <a class="dropdown-item" href="{% url 'add-post' %}">Start a discussion</a>
-                  <a class="dropdown-item" href="#">Ask a question</a>
-                  {%endif %}
+                  
                 </div>
+				{%endif %}
               </div>
         </div>
         

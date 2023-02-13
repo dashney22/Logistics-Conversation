@@ -35,24 +35,26 @@
           </li>
       </ul>
       <form class="form-inline my-2  my-lg-0">
-        {% if user.is_authenticated %}
-        
-        <div class="nav-item mx-10">
-          {% show_notifications %}
-        </div>
-        <div class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-light" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false"><i class="fas fa-user"></i></a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{%url 'profile' user.profile.id %}">Profile</a></li>
-            <li><a class="dropdown-item" href="{%url 'user-logout'%}">Logout</a></li>
-          </ul>
-        </div>
-        
-        {% else%}
-        <a href="{%url 'register-user'%}" class="btn btn-outline-info my-2 my-sm-0" type="submit">Register</a>
-        
-        <a href="{%url 'user-login'%}" class="btn btn-outline-info my-2 my-sm-0" type="submit">Login</a>
-        {% endif %}
+		{% if request.user.is_anonymous %}
+			<a href="{%url 'register-user'%}" class="btn btn-outline-info my-2 my-sm-0" type="submit">Register</a>
+			
+			<a href="{%url 'user-login'%}" class="btn btn-outline-info my-2 my-sm-0" type="submit">Login</a>
+		{% else%}
+		{% if user.is_authenticated %}
+				
+			<div class="nav-item mx-10">
+			{% show_notifications %}
+			</div>
+			<div class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle text-light" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false"><i class="fas fa-user"></i></a>
+			<ul class="dropdown-menu" style="left:50%; transform: translateX(-50%)">
+				<li><a class="dropdown-item" href="{%url 'profile' user.profile.id %}">Profile</a></li>
+				<li><a class="dropdown-item" href="{%url 'user-logout'%}">Logout</a></li>
+			</ul>
+			</div>
+		{% endif %}
+
+		{% endif %}
       </form>
     </div>
   </nav>

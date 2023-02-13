@@ -1,4 +1,4 @@
- 
+
 body {
     background-color: #e7e7e7;
   }
@@ -43,7 +43,9 @@ body {
     background-color: white;
   }
 
-  button.tagsbutton {
+
+
+button.tagsbutton {
 	background-color: aliceblue;
 	border-radius: 12px;
 	margin: 5px;
