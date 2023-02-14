@@ -30,7 +30,9 @@ titles = (("mr","Mr."),
 		  ("ms","Ms."),
 		  ("dr", "Dr."),
 		  ("prof","Prof."),)
-
+"""
+User class is an extension of the Base user class to include email field.
+"""
 class User(AbstractUser):
 	email = models.EmailField( null = False, blank = False)
 	checked = models.BooleanField(default= False)
@@ -38,7 +40,11 @@ class User(AbstractUser):
 	def __str__(self):
 		return self.first_name +" " + self.last_name
 
-
+"""
+Tag model: Used to create research and discussion tags to help link researchers to the research topics on the portal,
+Caption: Name of the tag that is displayed
+Description: Extension of the tag name to give more information on what the research tag entails.
+"""
 class Tag(models.Model):
 	caption = models.CharField(max_length=50)
 	description = models.TextField(default="")
@@ -48,7 +54,18 @@ class Tag(models.Model):
 
 	def get_absolute_url(self):
 		return reverse('share-thoughts')
+"""
+Post model: Used to create discussion topics where people can post a topic and others can comment on the discussion.
+Title: Short identifier title for the discussion
+Excerpt: Short description of what the discussion topic is about
+Image: An optional image that can be added to the discussion topic.
+Slug: ???
+Content: The content of the discussion topic, containing the information that the poster wants to share
+Author: Foreign key link to the person that posted the discussion topic
+Tags: Foreign key many to many link to the research tags that are associated with the discussion topic
+Likes: Foreign key nany to many link that counts the number of people that liked the discussion topic
 
+"""
 class Post(models.Model):
 	title = models.CharField(max_length=100)
 	excerpt = models.CharField(max_length=200)
@@ -111,7 +128,7 @@ class Profile(models.Model):
 	profile_picture = models.ImageField(upload_to="uploads/profile_pictures",default='uploads/profile_pictures/default.png',blank= True)
 	institute = models.CharField(max_length=100,blank=False,null=False,default="Unknown Institute")
 	tags = models.ManyToManyField(Tag,blank= True, related_name= "researcher_tags")
-	display_email_opt = models.BooleanField(default=True)
+	display_email_opt = models.BooleanField(default=False)
 
 class Notification(models.Model):
 	notification_type = models.IntegerField()

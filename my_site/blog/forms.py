@@ -287,5 +287,5 @@ class ProfileUpdateForm(ModelForm):
 			'tags': forms.CheckboxSelectMultiple,
 		}
 		labels ={
-			'display_email_opt':"Do you wish to display your email address on your profile?"
+			'display_email_opt':"Do you wish to display your email address on your profile?",
 		}
